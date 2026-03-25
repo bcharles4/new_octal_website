@@ -1,0 +1,234 @@
+.jd-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(6, 10, 8, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.jd-modal {
+  position: relative;
+  width: 100%;
+  max-width: 660px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-white);
+  border-radius: 20px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3), 0 0 60px rgba(89, 161, 74, 0.08);
+  overflow: hidden;
+}
+
+/* Close */
+.jd-modal__close {
+  position: absolute;
+  top: 1.2rem;
+  right: 1.2rem;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-light);
+  border: 1px solid rgba(89, 161, 74, 0.1);
+  border-radius: 50%;
+  color: var(--text-dark-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.jd-modal__close:hover {
+  background: rgba(89, 161, 74, 0.1);
+  color: var(--primary-dark);
+  border-color: var(--primary);
+}
+
+/* Header */
+.jd-modal__header {
+  padding: 2.5rem 2.5rem 1.5rem;
+  border-bottom: 1px solid rgba(89, 161, 74, 0.1);
+  padding-right: 4rem;
+  flex-shrink: 0;
+}
+
+.jd-modal__badges {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.jd-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 12px;
+  background: rgba(89, 161, 74, 0.08);
+  border: 1px solid rgba(89, 161, 74, 0.18);
+  border-radius: 50px;
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.jd-badge--dept {
+  background: rgba(89, 161, 74, 0.14);
+  border-color: rgba(89, 161, 74, 0.3);
+}
+
+.jd-modal__title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-dark);
+  letter-spacing: 0.02em;
+  margin-bottom: 0.6rem;
+  line-height: 1.3;
+}
+
+.jd-modal__location {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  color: var(--text-dark-muted);
+}
+
+/* Body */
+.jd-modal__body {
+  overflow-y: auto;
+  padding: 1.8rem 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  flex: 1;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary-dark) transparent;
+}
+
+.jd-modal__body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.jd-modal__body::-webkit-scrollbar-thumb {
+  background: var(--primary-dark);
+  border-radius: 2px;
+}
+
+.jd-modal__section-title {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--primary-dark);
+  margin-bottom: 0.7rem;
+}
+
+.jd-modal__desc {
+  font-size: 0.88rem;
+  color: var(--text-dark-muted);
+  line-height: 1.75;
+}
+
+.jd-modal__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0;
+  margin: 0;
+}
+
+.jd-modal__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.86rem;
+  color: var(--text-dark-muted);
+  line-height: 1.6;
+}
+
+.jd-modal__list li::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  min-width: 6px;
+  background: var(--primary);
+  border-radius: 50%;
+  margin-top: 0.45rem;
+}
+
+.jd-modal__list--benefits li::before {
+  background: var(--primary-dark);
+}
+
+/* Footer */
+.jd-modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+  padding: 1.2rem 2.5rem;
+  border-top: 1px solid rgba(89, 161, 74, 0.1);
+  background: var(--bg-white);
+  flex-shrink: 0;
+}
+
+.jd-cancel-btn {
+  color: var(--text-dark-muted);
+  border-color: rgba(89, 161, 74, 0.2);
+  padding: 11px 24px;
+  font-size: 0.78rem;
+}
+
+.jd-cancel-btn:hover {
+  color: var(--white);
+}
+
+.jd-apply-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 11px 28px;
+  font-size: 0.78rem;
+}
+
+@media (max-width: 580px) {
+  .jd-overlay {
+    padding: 1rem;
+    align-items: flex-end;
+  }
+
+  .jd-modal {
+    max-height: 92vh;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .jd-modal__header {
+    padding: 1.5rem 1.5rem 1.2rem;
+    padding-right: 3.5rem;
+  }
+
+  .jd-modal__body {
+    padding: 1.2rem 1.5rem;
+  }
+
+  .jd-modal__footer {
+    padding: 1rem 1.5rem;
+    flex-direction: column-reverse;
+  }
+
+  .jd-cancel-btn,
+  .jd-apply-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

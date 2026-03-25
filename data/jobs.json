@@ -1,0 +1,124 @@
+[
+  {
+    "id": "1",
+    "title": "Flutter Developer",
+    "department": "Software Services",
+    "location": "Bonifacio Global City, Taguig · Onsite",
+    "type": "Full-time",
+    "description": "We are seeking a highly skilled and detail-oriented professional with strong full-stack development expertise and a keen eye for user interface design and user experience. The ideal candidate is capable of handling mission-critical support under tight deadlines and thrives in fast-paced environments. Experience in the banking or financial services industry is highly preferred.",
+    "responsibilities": [
+      "Develop and maintain cross-platform mobile and web applications using the Flutter framework.",
+      "Design and implement backend services and RESTful APIs using C#.NET, including integration with internal and external systems.",
+      "Manage and optimize databases (PostgreSQL, MySQL, MSSQL) to ensure system performance and data integrity.",
+      "Provide technical support, troubleshoot critical issues, and ensure the stability and reliability of applications."
+    ],
+    "requirements": [
+      "Minimum 2+ years of experience in mobile/web development using Flutter.",
+      "Minimum 3+ years of database experience in PostgreSQL, MySQL, and MSSQL.",
+      "Strong experience in C#.NET backend development.",
+      "Proven expertise in REST API design and complex API integrations.",
+      "Strong understanding of full-stack architecture.",
+      "Expert knowledge of GIT and collaborative development practices.",
+      "Strong eye for UI design and user experience.",
+      "Ability to work effectively under pressure and manage urgent technical issues.",
+      "Highly organized with strong problem-solving and analytical skills.",
+      "Excellent communication and teamwork abilities.",
+      "Experience in banking or financial services is a significant advantage."
+    ],
+    "benefits": []
+  },
+  {
+    "id": "2",
+    "title": "Integration Developer",
+    "department": "Software Services",
+    "location": "Bonifacio Global City, Taguig · Onsite",
+    "type": "Full-time",
+    "description": "We are looking for an Integration Developer to support the development and integration of payment APIs. The role involves building and maintaining backend services, integrating REST APIs, and ensuring smooth system connectivity for payment processing.",
+    "responsibilities": [
+      "Develop and maintain Payment API integrations using .NET Core.",
+      "Build and integrate RESTful APIs with internal and external systems.",
+      "Manage databases using PostgreSQL and MS SQL.",
+      "Troubleshoot and resolve integration and technical issues promptly.",
+      "Collaborate with development teams to enhance system integrations.",
+      "Utilize Git, JIRA, and CI/CD tools for development and deployment processes."
+    ],
+    "requirements": [
+      "1–2 years of experience in .NET Core development.",
+      "Experience with REST API development and API integration.",
+      "Familiarity with PostgreSQL and MS SQL databases.",
+      "Knowledge of Git, JIRA, and CI/CD tools.",
+      "Strong problem-solving skills and ability to work in a team.",
+      "Banking or financial system experience is a plus."
+    ],
+    "benefits": []
+  },
+  {
+    "id": "1773386000039",
+    "title": "Backend ",
+    "department": "IT",
+    "location": "Bonifacio Global City, Taguig · Onsite",
+    "type": "Full-time",
+    "description": "For Testing",
+    "responsibilities": [
+      "Develop.",
+      "Maintain Code.",
+      "Understanding About SDLC.",
+      "Responsible for Functionalities"
+    ],
+    "requirements": [
+      "3+ years Experience"
+    ],
+    "benefits": [
+      "Competitive Salary"
+    ]
+  },
+  {
+    "id": "1773640066521",
+    "title": "title, department and description are required.",
+    "location": "title, department and description are required.",
+    "type": "Full-time",
+    "description": "title, department and description are required.\n\n",
+    "responsibilities": [
+      "title, department and description are required."
+    ],
+    "requirements": [
+      "title, department and description are required.",
+      "title, department and description are required."
+    ],
+    "benefits": [
+      "title, department and description are required."
+    ]
+  },
+  {
+    "id": "1773640089080",
+    "title": "title, department and description are required.",
+    "location": "title, department and description are required.",
+    "type": "Full-time",
+    "description": "title, department and description are required.\n\n",
+    "responsibilities": [
+      "title, department and description are required."
+    ],
+    "requirements": [
+      "title, department and description are required."
+    ],
+    "benefits": [
+      "title, department and description are required."
+    ]
+  },
+  {
+    "id": "1773640098975",
+    "title": "title, department and description are required.",
+    "location": "title, department and description are required.",
+    "type": "Full-time",
+    "description": "title, department and description are required.\n\n",
+    "responsibilities": [
+      "title, department and description are required."
+    ],
+    "requirements": [
+      "title, department and description are required."
+    ],
+    "benefits": [
+      "title, department and description are required."
+    ]
+  }
+]

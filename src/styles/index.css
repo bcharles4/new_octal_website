@@ -1,0 +1,288 @@
+/* ============================
+   OCTAL PHILIPPINES INC. 
+   Global Styles
+   ============================ */
+
+:root {
+  --primary: #59a14a;
+  --primary-dark: #497e44;
+  --accent: #0c4513;
+  --deep: #1e5649;
+  --bg-dark: #0a0f0d;
+  --bg-darker: #060a08;
+  --bg-light: #f7faf6;
+  --bg-white: #ffffff;
+  --text-light: #e8f5e3;
+  --text-muted: #8aab85;
+  --text-dark: #1a2e1a;
+  --text-dark-muted: #5a7a56;
+  --white: #ffffff;
+  --glass-bg: rgba(30, 86, 73, 0.12);
+  --glass-border: rgba(89, 161, 74, 0.15);
+  --glass-light-bg: rgba(89, 161, 74, 0.06);
+  --glass-light-border: rgba(89, 161, 74, 0.12);
+  --glow: 0 0 40px rgba(89, 161, 74, 0.3);
+
+  --font-display: 'Poppins', sans-serif;
+  --font-body: 'Poppins', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) var(--bg-darker);
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-dark);
+  color: var(--text-light);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-darker);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-dark);
+  border-radius: 3px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--text-light);
+}
+
+.section {
+  position: relative;
+  min-height: 100vh;
+  padding: 100px 5%;
+  overflow: hidden;
+}
+
+.section-title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--primary), var(--text-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-subtitle {
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  max-width: 600px;
+  line-height: 1.7;
+  margin-bottom: 3rem;
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 2rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: all 0.4s ease;
+}
+
+.glass-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--glow);
+  transform: translateY(-4px);
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 14px 32px;
+  background: #004610;
+  color: var(--white);
+  border: none;
+  border-radius: 50px;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: left 0.5s ease;
+}
+
+.btn-primary:hover::before {
+  left: 100%;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 30px rgba(25, 89, 12, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 14px 32px;
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  border-radius: 50px;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.btn-outline:hover {
+  background: white;
+  color: black;
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+}
+
+/* Animated background grid */
+.bg-grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(89, 161, 74, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(89, 161, 74, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Floating particles */
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.5; }
+  50% { transform: translateY(-20px) rotate(180deg); opacity: 1; }
+}
+
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-darker);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 10000;
+}
+
+.loading-screen .logo-text {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--primary);
+  letter-spacing: 0.3em;
+  margin-bottom: 2rem;
+}
+
+.loading-bar-container {
+  width: 200px;
+  height: 3px;
+  background: rgba(89, 161, 74, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loading-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--text-light));
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* ============================
+   Light Section Variants
+   ============================ */
+
+.section--light {
+  background: var(--bg-white);
+  color: var(--text-dark);
+}
+
+.section--light-alt {
+  background: var(--bg-light);
+  color: var(--text-dark);
+}
+
+.section--light .section-title,
+.section--light-alt .section-title {
+  background: linear-gradient(135deg, var(--accent), var(--primary-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section--light .section-subtitle,
+.section--light-alt .section-subtitle {
+  color: var(--text-dark-muted);
+}
+
+.section--light .glass-card,
+.section--light-alt .glass-card {
+  background: var(--bg-white);
+  border: 1px solid var(--glass-light-border);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.06);
+}
+
+.section--light .glass-card:hover,
+.section--light-alt .glass-card:hover {
+  border-color: var(--primary);
+  box-shadow: 0 8px 40px rgba(89, 161, 74, 0.12);
+  transform: translateY(-4px);
+}
+
+.section--light .about__label,
+.section--light-alt .about__label {
+  color: var(--primary-dark);
+  border-color: rgba(89, 161, 74, 0.3);
+  background: rgba(89, 161, 74, 0.06);
+}
