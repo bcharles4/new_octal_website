@@ -9,7 +9,7 @@ services:
       - .env
     environment:
       NODE_ENV: production
-      HOST: 0.0.0.0
+      HOST: 192.168.254.121
       PORT: 3001
     ports:
       - "3001:3001"
