@@ -1,23 +1,17 @@
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: immersive-portfolio:latest
+  web:
+    image: nginx:alpine
     container_name: immersive-portfolio
-    env_file:
-      - .env
-    environment:
-      NODE_ENV: production
-      HOST: 192.168.254.121
-      PORT: 3001
     ports:
-      - "3001:3001"
+      - "80:80"
+      - "443:443"
     volumes:
-      - ./data:/app/data
+      - ./website:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO- http://localhost:3001/health || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:80 || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 3
