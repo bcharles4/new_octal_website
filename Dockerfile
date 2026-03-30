@@ -13,7 +13,7 @@ RUN npm run build
 FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
-ENV HOST=0.0.0.0
+ENV HOST=192.168.10.85
 ENV PORT=3001
 
 COPY package.json package-lock.json ./
