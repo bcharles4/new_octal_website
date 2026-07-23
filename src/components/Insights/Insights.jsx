@@ -8,6 +8,7 @@ import accumatica from '../../assets/img/accumatica.png';
 import outing from '../../assets/img/outing.png';
 import projectManagement from '../../assets/img/pmw.png';
 import projectTeam from '../../assets/img/ptdt.jpg';
+import bambooPlanting from '../../assets/img/bp.jpg';
 
 
 gsap.registerPlugin(ScrollTrigger);
@@ -49,11 +50,11 @@ const ARTICLES = [
     image: accumatica,
   },
   {
-    tag: 'Events',
-    title: 'Asia Partner of the Year - 2017',
+    tag: 'Environments',
+    title: 'Octal Philippines Bamboo Planting Initiative',
     excerpt: 'Octal together with Litus Software and Sun Micro Development Concepts Inc. These enthusiastic employees spend their weekend giving back to nature by planting Bamboos as their pledge for a greener community.',
-    date: 'Dec, 2017',
-    image: accumatica,
+    date: 'July, 2018',
+    image: bambooPlanting,
   },
 ];
 
