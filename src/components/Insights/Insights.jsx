@@ -3,50 +3,57 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Insights.css';
 
+import drisImg from '../../assets/img/dris.jpg';
+import accumatica from '../../assets/img/accumatica.png';
+import outing from '../../assets/img/outing.png';
+import projectManagement from '../../assets/img/pmw.png';
+import projectTeam from '../../assets/img/ptdt.jpg';
+
+
 gsap.registerPlugin(ScrollTrigger);
 
 const ARTICLES = [
   {
-    tag: 'Technology',
-    title: 'The Future of Enterprise IT Staffing in the Philippines',
-    excerpt: 'How flexible staffing models are reshaping the way businesses build high-performing tech teams in a rapidly evolving digital landscape.',
-    date: 'Feb 10, 2026',
-    readTime: '5 min read',
+    tag: 'Disaster Recovery',
+    title: 'Disaster Recovery Introduction Seminar',
+    excerpt: 'We successfully conducted our Disaster Recovery Introduction Seminar, equipping participants with valuable insights on how businesses can prepare, respond, and recover from unexpected disruptions.',
+    date: 'Feb 6, 2026',
+    image: drisImg,
   },
   {
-    tag: 'Infrastructure',
-    title: 'Why Proactive IT Management is No Longer Optional',
-    excerpt: 'Business continuity planning and proactive infrastructure management are critical to staying competitive. Here\'s what BLISS delivers.',
-    date: 'Jan 28, 2026',
-    readTime: '4 min read',
+    tag: 'Technology',
+    title: 'Project Team Dynamics Training',
+    excerpt:'Octal Philippines Inc. conducted a training session for its employees titled “Project Team Dynamics: Using the Myers-Briggs Type Indicator (MBTI) to Understand Work Styles and Communication” last May 2, 2025.',
+    date: 'May 02, 2025',
+    image: projectTeam,
   },
   {
     tag: 'Software',
-    title: 'ERP Implementation: From Complexity to Clarity',
-    excerpt: 'A deep dive into how customized ERP solutions are helping enterprises across Southeast Asia streamline operations and scale sustainably.',
-    date: 'Jan 15, 2026',
-    readTime: '6 min read',
+    title: 'Project Management Workshop',
+    excerpt:'The workshop provided valuable knowledge and practical strategies that participants can immediately apply in both their professional responsibilities and everyday endeavors.',
+    date: 'Feb 08, 2024',
+    image: projectManagement,
   },
   {
-    tag: 'Industry',
-    title: 'Digital Transformation Trends Driving Growth in 2026',
-    excerpt: 'From AI-driven automation to cloud-first strategies, discover the key technology trends empowering businesses this year.',
+    tag: 'Recreational',
+    title: 'Summer Outing 2023: A Day of Fun and Team Bonding',
+    excerpt:'Good times, bonds created, and teamwork strengthened during the Octal Summer Outing 2023! Core memory unlocked indeed, as the team had a fun summer adventure and activities at Botolan, Zambales.',
     date: 'Jan 5, 2026',
-    readTime: '7 min read',
+    image: outing,
   },
   {
-    tag: 'Culture',
-    title: 'Building a Future-Ready Workforce at Octal',
-    excerpt: 'How we invest in our people through continuous learning, mentorship, and a culture of innovation that drives real results.',
-    date: 'Dec 20, 2025',
-    readTime: '3 min read',
+    tag: 'Events',
+    title: 'Asia Partner of the Year - 2017',
+    excerpt: 'Cloudqwest and Octal Philippines has been awarded by Acumatica as Asia Partner of the Year - 2017',
+    date: 'Dec, 2017',
+    image: accumatica,
   },
   {
-    tag: 'Case Study',
-    title: 'Transforming Operations for a Leading Logistics Firm',
-    excerpt: 'How Octal\'s managed services and ERP solutions helped a major logistics company cut operational costs by 35% in 12 months.',
-    date: 'Dec 8, 2025',
-    readTime: '5 min read',
+    tag: 'Events',
+    title: 'Asia Partner of the Year - 2017',
+    excerpt: 'Octal together with Litus Software and Sun Micro Development Concepts Inc. These enthusiastic employees spend their weekend giving back to nature by planting Bamboos as their pledge for a greener community.',
+    date: 'Dec, 2017',
+    image: accumatica,
   },
 ];
 
@@ -89,13 +96,20 @@ export default function Insights() {
       <div className="insights__grid">
         {ARTICLES.map((article) => (
           <article key={article.title} className="insight-card glass-card">
-            <div className="insight-card__tag">{article.tag}</div>
-            <h3 className="insight-card__title">{article.title}</h3>
-            <p className="insight-card__excerpt">{article.excerpt}</p>
-            <div className="insight-card__meta">
-              <span>{article.date}</span>
-              <span className="insight-card__dot">·</span>
-              <span>{article.readTime}</span>
+            {article.image && (
+              <div className="insight-card__image">
+                <img src={article.image} alt={article.title} loading="lazy" />
+              </div>
+            )}
+            <div className="insight-card__body">
+              <div className="insight-card__tag">{article.tag}</div>
+              <h3 className="insight-card__title">{article.title}</h3>
+              <p className="insight-card__excerpt">{article.excerpt}</p>
+              <div className="insight-card__meta">
+                <span>{article.date}</span>
+                <span className="insight-card__dot">·</span>
+                <span>{article.readTime}</span>
+              </div>
             </div>
           </article>
         ))}

@@ -4,6 +4,7 @@ import Loader from './components/Loader/Loader';
 import Navbar from './components/Navbar/Navbar';
 import Hero from './components/Hero/Hero';
 import About from './components/About/About';
+import Founders from './components/Founders/Founders';
 import Services from './components/Services/Services';
 import Footer from './components/Footer/Footer';
 import TermsOfUse from './components/TermsOfUse/TermsOfUse';
@@ -31,6 +32,7 @@ function Portfolio() {
       <main>
         <Hero />
         <About />
+        <Founders />
         <Services />
         <Suspense fallback={null}>
           <Insights />

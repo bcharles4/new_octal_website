@@ -74,7 +74,7 @@ export default function Contact() {
         <span className="about__label">Get In Touch</span>
         <h2 className="section-title">Let's Connect</h2>
         <p className="section-subtitle" style={{ margin: '1rem auto 0', textAlign: 'center' }}>
-          Ready to transform your digital presence? Reach out and let's discuss your next project.
+          Thank you for visiting Octal Philippines Inc. We value your interest and look forward to collaborating with you to create solutions that empower success.
         </p>
       </div>
 
@@ -201,8 +201,8 @@ export default function Contact() {
             </div>
             <div>
               <h4>Phone</h4>
-              <p>02 7006-5975</p>
-              <p>02 8332-0908</p>
+              <p>7006-5975</p>
+              <p>8365-3311</p>
             </div>
           </div>
 

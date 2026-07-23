@@ -1,17 +1,25 @@
-import { useEffect, useRef, useMemo, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { useEffect, useRef, useMemo } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, Stars } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import './Hero.css';
 
-/* Animated particle field */
+/* Animated particle field — cursor-reactive */
 function ParticleField() {
   const meshRef = useRef();
   const count = 800;
+  const { pointer, camera } = useThree();
 
-  const [positions, colors] = useMemo(() => {
+  const isInteractiveRef = useRef(false);
+  useEffect(() => {
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    isInteractiveRef.current = !isTouch && !prefersReduced;
+  }, []);
+
+  const [positions, originalColors] = useMemo(() => {
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
     const baseColor = new THREE.Color('#59a14a');
@@ -30,18 +38,55 @@ function ParticleField() {
     return [pos, col];
   }, []);
 
+  const workingColors = useMemo(() => new Float32Array(originalColors), [originalColors]);
+  const localCursor = useMemo(() => new THREE.Vector3(), []);
+  const worldCursor = useMemo(() => new THREE.Vector3(), []);
+  const raycaster = useMemo(() => new THREE.Raycaster(), []);
+  const cursorPlane = useMemo(() => new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), []);
+
   useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.03;
-      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.02) * 0.1;
+    if (!meshRef.current) return;
+    meshRef.current.rotation.y = state.clock.elapsedTime * 0.03;
+    meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.02) * 0.1;
+
+    if (!isInteractiveRef.current) return;
+
+    raycaster.setFromCamera(pointer, camera);
+    if (!raycaster.ray.intersectPlane(cursorPlane, worldCursor)) return;
+
+    localCursor.copy(worldCursor);
+    meshRef.current.worldToLocal(localCursor);
+
+    const colorAttr = meshRef.current.geometry.attributes.color;
+    const RADIUS = 3.2;
+    const RADIUS_SQ = RADIUS * RADIUS;
+
+    for (let i = 0; i < count; i++) {
+      const i3 = i * 3;
+      const dx = positions[i3] - localCursor.x;
+      const dy = positions[i3 + 1] - localCursor.y;
+      const dz = positions[i3 + 2] - localCursor.z;
+      const distSq = dx * dx + dy * dy + dz * dz;
+
+      if (distSq < RADIUS_SQ) {
+        const boost = 1 - Math.sqrt(distSq) / RADIUS;
+        colorAttr.array[i3] = Math.min(1, originalColors[i3] + boost * 0.7);
+        colorAttr.array[i3 + 1] = Math.min(1, originalColors[i3 + 1] + boost * 0.7);
+        colorAttr.array[i3 + 2] = Math.min(1, originalColors[i3 + 2] + boost * 0.7);
+      } else {
+        colorAttr.array[i3] = originalColors[i3];
+        colorAttr.array[i3 + 1] = originalColors[i3 + 1];
+        colorAttr.array[i3 + 2] = originalColors[i3 + 2];
+      }
     }
+    colorAttr.needsUpdate = true;
   });
 
   return (
     <points ref={meshRef}>
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" array={positions} count={count} itemSize={3} />
-        <bufferAttribute attach="attributes-color" array={colors} count={count} itemSize={3} />
+        <bufferAttribute attach="attributes-color" array={workingColors} count={count} itemSize={3} />
       </bufferGeometry>
       <pointsMaterial size={0.035} vertexColors transparent opacity={0.8} sizeAttenuation />
     </points>
@@ -82,8 +127,7 @@ function HelixLines() {
   const lineCount = 30;
 
   const lines = useMemo(() => {
-    const result = [];
-    for (let i = 0; i < lineCount; i++) {
+    const result = [];    for (let i = 0; i < lineCount; i++) {
       const t = (i / lineCount) * Math.PI * 4;
       const x1 = Math.cos(t) * 3;
       const z1 = Math.sin(t) * 3;
@@ -108,11 +152,7 @@ function HelixLines() {
 
   return (
     <group ref={groupRef} position={[5, 0, -5]}>
-      {lines.map((l, i) => (
-        <line key={i} geometry={l.geometry}>
-          <lineBasicMaterial color="#59a14a" transparent opacity={l.opacity} />
-        </line>
-      ))}
+
     </group>
   );
 }
@@ -122,7 +162,7 @@ export default function Hero() {
   const headingRef = useRef(null);
   const subRef = useRef(null);
   const ctaRef = useRef(null);
-  const tagRef = useRef(null);
+  const titleInnerRef = useRef(null);
   const navigate = useNavigate();
   const clickCountRef = useRef(0);
   const clickTimerRef = useRef(null);
@@ -139,33 +179,38 @@ export default function Hero() {
   };
 
   useEffect(() => {
-    const tl = gsap.timeline({ delay: 2.3 });
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    tl.fromTo(tagRef.current,
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }
-    )
-    .fromTo(headingRef.current,
-      { opacity: 0, y: 60, clipPath: 'inset(100% 0 0 0)' },
-      { opacity: 1, y: 0, clipPath: 'inset(0% 0 0 0)', duration: 1, ease: 'power4.out' },
-      '-=0.3'
-    )
-    .fromTo(subRef.current,
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
-      '-=0.5'
-    )
-    .fromTo(ctaRef.current,
-      { opacity: 0, y: 20 },
-      { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' },
-      '-=0.3'
-    );
+    const ctx = gsap.context(() => {
+      if (prefersReduced) {
+        gsap.set([subRef.current, ctaRef.current], { opacity: 1, y: 0 });
+        gsap.set(titleInnerRef.current, { yPercent: 0, clipPath: 'inset(0% 0 0 0)' });
+        return;
+      }
 
-    return () => tl.kill();
+      const tl = gsap.timeline({ delay: 2.3 });
+
+      tl.fromTo(titleInnerRef.current,
+        { yPercent: 110, clipPath: 'inset(100% 0 0 0)' },
+        { yPercent: 0, clipPath: 'inset(0% 0 0 0)', duration: 1.05, ease: 'expo.out' }
+      )
+      .fromTo(subRef.current,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' },
+        '-=0.5'
+      )
+      .fromTo(ctaRef.current,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' },
+        '-=0.3'
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
-    <section id="home" ref={sectionRef} className="hero">
+    <section id="home" ref={sectionRef} className="hero" aria-labelledby="hero-title">
       <div className="hero__canvas">
         <Canvas camera={{ position: [0, 0, 8], fov: 60 }} dpr={[1, 1.5]} performance={{ min: 0.5 }}>
           <ambientLight intensity={0.3} />
@@ -179,32 +224,34 @@ export default function Hero() {
       </div>
 
       <div className="hero__content">
-        <div ref={tagRef} className="hero__tag">
-          <span className="hero__tag-dot" />
-          Building Futures Together
-        </div>
-        <h1 ref={headingRef} className="hero__title">
-          Octal<br />
-          <span className="hero__title-highlight">Philippines</span><br />
-        Inc.
+        <h1 id="hero-title" ref={headingRef} className="hero__title">
+          <span className="hero__title-line">
+            <span ref={titleInnerRef} className="hero__title-inner">
+             YOUR PARTNER IN SUSTAINABLE <span className="hero__title-highlight">GROWTH AND INNOVATION</span>
+            </span>   
+          </span>
         </h1>
         <p ref={subRef} className="hero__subtitle">
-          We don’t just deliver solutions — we build partnerships. Our commitment is to help organizations harness technology, empower people, and achieve measurable results that last.
-        </p>
+We don’t just deliver solutions — we build partnerships. Our commitment is to help organizations harness technology, empower people, and achieve measurable results that last.        </p>
         <div ref={ctaRef} className="hero__cta">
-          <button className="btn-primary" onClick={() => document.getElementById('solutions')?.scrollIntoView({ behavior: 'smooth' })}>
+          <a className="btn-primary" href="#solutions">
             Explore Solutions
-          </button>
-          <button className="btn-outline" onClick={() => document.getElementById('connect')?.scrollIntoView({ behavior: 'smooth' })}>
+          </a>
+          <a className="btn-outline" href="#connect">
             Let's Connect
-          </button>
+          </a>
         </div>
       </div>
 
-      <div className="hero__scroll-indicator">
-        <div className="hero__scroll-line" />
-        <span>Scroll</span>
-      </div>
+      <button
+        type="button"
+        className="hero__scroll-indicator"
+        onClick={() => document.getElementById('solutions')?.scrollIntoView({ behavior: 'smooth' })}
+        aria-label="Scroll to solutions"
+      >
+        <div className="hero__scroll-line" aria-hidden="true" />
+        <span aria-hidden="true">Scroll</span>
+      </button>
     </section>
   );
 }

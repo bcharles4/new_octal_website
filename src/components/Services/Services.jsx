@@ -34,7 +34,7 @@ const SERVICES = [
     icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>,
     title: 'Bluesource Infrastructure Services (BLISS)',
     desc: 'Proactive IT management, business continuity planning, and trusted technology partnerships to keep your operations reliable, secure, and future-ready.',
-    features: ['IT Management', 'Business Continuity', 'Technology Partnerships'],
+    features: ['Managed Maintenance Services', 'Business Continuity and Disaster Recovery Consulting', 'Technology Partnerships'],
     details: {
       intro:
         'Keep your IT infrastructure running at peak performance with BLISS — our comprehensive suite of managed services designed to ensure reliability, security, and business continuity.',
