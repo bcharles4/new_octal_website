@@ -37,15 +37,15 @@ const ARTICLES = [
   },
   {
     tag: 'Recreational',
-    title: 'Summer Outing 2023: A Day of Fun and Team Bonding',
+    title: 'A Day of Fun and Team Bonding',
     excerpt:'Good times, bonds created, and teamwork strengthened during the Octal Summer Outing 2023! Core memory unlocked indeed, as the team had a fun summer adventure and activities at Botolan, Zambales.',
     date: 'Jan 5, 2026',
     image: outing,
   },
   {
     tag: 'Events',
-    title: 'Asia Partner of the Year - 2017',
-    excerpt: 'Cloudqwest and Octal Philippines has been awarded by Acumatica as Asia Partner of the Year - 2017',
+    title: 'Asia Partner of the Year 2017',
+    excerpt: 'Cloudqwest and Octal Philippines were recognized by Acumatica as the Asia Partner of the Year 2017, a prestigious award that celebrates their outstanding sales achievements, unwavering commitment to customer success, and excellence in delivering Acumatica ERP solutions throughout the region.',
     date: 'Dec, 2017',
     image: accumatica,
   },
@@ -89,8 +89,9 @@ export default function Insights() {
         <span className="about__label">Knowledge Hub</span>
         <h2 className="section-title">Insights & Resources</h2>
         <p className="section-subtitle" style={{ margin: '1rem auto 0', textAlign: 'center' }}>
-          Stay informed with the latest trends, strategies, and stories from the
-          world of technology and business transformation.
+          Every milestone tells a story. Stay informed with our latest news, expert insights,
+          and company events as we celebrate achievements, embrace innovation, strengthen
+          partnerships, and empower our people. Explore how we learn, innovate, and succeed—together.
         </p>
       </div>
 

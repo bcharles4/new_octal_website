@@ -4,6 +4,7 @@ import { Float, Stars } from '@react-three/drei';
 import { useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 import gsap from 'gsap';
+import CardSwap, { Card } from '../CardSwap/CardSwap';
 import './Hero.css';
 
 /* Animated particle field — cursor-reactive */
@@ -45,7 +46,7 @@ function ParticleField() {
   const cursorPlane = useMemo(() => new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), []);
 
   useFrame((state) => {
-    if (!meshRef.current) return;
+    if (!meshRef.current) return; 
     meshRef.current.rotation.y = state.clock.elapsedTime * 0.03;
     meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.02) * 0.1;
 
@@ -67,6 +68,7 @@ function ParticleField() {
       const dy = positions[i3 + 1] - localCursor.y;
       const dz = positions[i3 + 2] - localCursor.z;
       const distSq = dx * dx + dy * dy + dz * dz;
+
 
       if (distSq < RADIUS_SQ) {
         const boost = 1 - Math.sqrt(distSq) / RADIUS;
@@ -93,7 +95,7 @@ function ParticleField() {
   );
 }
 
-/* Glowing octahedron */
+/* Glowing octahedron — centered. Click it 5 times to reach admin login. */
 function GlowOctahedron({ onSecretClick }) {
   const meshRef = useRef();
 
@@ -106,15 +108,20 @@ function GlowOctahedron({ onSecretClick }) {
 
   return (
     <Float speed={2} rotationIntensity={0.5} floatIntensity={1}>
-      <mesh ref={meshRef} onClick={onSecretClick}>
-        <octahedronGeometry args={[1.2, 0]} />
+      <mesh
+        ref={meshRef}
+        onClick={(e) => { e.stopPropagation(); onSecretClick(); }}
+        onPointerOver={() => { document.body.style.cursor = 'pointer'; }}
+        onPointerOut={() => { document.body.style.cursor = 'auto'; }}
+      >
+        <octahedronGeometry args={[1.4, 0]} />
         <meshStandardMaterial
           color="#59a14a"
           emissive="#59a14a"
-          emissiveIntensity={0.4}
+          emissiveIntensity={0.45}
           wireframe
           transparent
-          opacity={0.6}
+          opacity={0.65}
         />
       </mesh>
     </Float>
@@ -223,7 +230,9 @@ export default function Hero() {
         </Canvas>
       </div>
 
+      <div className="hero__container">
       <div className="hero__content">
+        {/* TEXT COLUMN */}
         <h1 id="hero-title" ref={headingRef} className="hero__title">
           <span className="hero__title-line">
             <span ref={titleInnerRef} className="hero__title-inner">
@@ -232,15 +241,77 @@ export default function Hero() {
           </span>
         </h1>
         <p ref={subRef} className="hero__subtitle">
-We don’t just deliver solutions — we build partnerships. Our commitment is to help organizations harness technology, empower people, and achieve measurable results that last.        </p>
+          We don’t just deliver solutions — we build partnerships. Our commitment is to help organizations harness technology, empower people, and achieve measurable results that last.        </p>
         <div ref={ctaRef} className="hero__cta">
           <a className="btn-primary" href="#solutions">
-            Explore Solutions
+            Explore
           </a>
-          <a className="btn-outline" href="#connect">
-            Let's Connect
-          </a>
+          <button
+            type="button"
+            className="learn-more"
+            onClick={() =>
+              document
+                .getElementById('connect')
+                ?.scrollIntoView({ behavior: 'smooth' })
+            }
+          >
+            <span className="circle" aria-hidden="true">
+              <span className="icon arrow" />
+            </span>
+            <span className="button-text">Let's Connect</span>
+          </button>
         </div>
+      </div>
+
+      {/* MIDDLE COLUMN — reserved space so the octahedron (rendered in the
+          full-hero canvas above) sits at the visual center between text
+          and cards without either side crowding it. */}
+      <div className="hero__spacer" aria-hidden="true" />
+
+      {/* RIGHT COLUMN — motivational quote card stack (CardSwap) */}
+      <div className="hero__cards">
+        <CardSwap
+          width={380}
+          height={260}
+          cardDistance={50}
+          verticalDistance={55}
+          delay={4500}
+          pauseOnHover
+          skewAmount={5}
+          easing="elastic"
+        >
+          <Card>
+            <div className="hero-card__body">
+              <span className="hero-card__eyebrow">Engineering</span>
+              <h3 className="hero-card__title">Craft Over Code</h3>
+              <p className="hero-card__quote">
+                "We don't just write code — we architect solutions that
+                grow with your vision."
+              </p>
+            </div>
+          </Card>
+          <Card>
+            <div className="hero-card__body">
+              <span className="hero-card__eyebrow">Talent</span>
+              <h3 className="hero-card__title">Right People, Right Outcomes</h3>
+              <p className="hero-card__quote">
+                "The right people don't just fill roles — they redefine
+                what's possible."
+              </p>
+            </div>
+          </Card>
+          <Card>
+            <div className="hero-card__body">
+              <span className="hero-card__eyebrow">Partnership</span>
+              <h3 className="hero-card__title">Built on Trust</h3>
+              <p className="hero-card__quote">
+                "Every project is a partnership. Every solution, a shared
+                success."
+              </p>
+            </div>
+          </Card>
+        </CardSwap>
+      </div>
       </div>
 
       <button

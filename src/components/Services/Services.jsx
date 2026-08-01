@@ -2,12 +2,15 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './Services.css';
+import itStaffIcon from '../../assets/img/ITstaff.png';
+import blissIcon from '../../assets/img/Bliss.png';
+import softwareServicesIcon from '../../assets/img/SoftwareS.png';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const SERVICES = [
   {
-    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>,
+    icon: <img src={itStaffIcon} alt="" className="service-card__icon-img" />,
     title: 'IT Staffing Solutions',
     desc: 'Connecting businesses with top talent through flexible staffing, recruitment, and executive search services — ensuring the right people are in place to drive success.',
     features: ['Flexible Staffing', 'Talent Recruitment', 'Executive Search'],
@@ -31,7 +34,7 @@ const SERVICES = [
     },
   },
   {
-    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>,
+    icon: <img src={blissIcon} alt="" className="service-card__icon-img" />,
     title: 'Bluesource Infrastructure Services (BLISS)',
     desc: 'Proactive IT management, business continuity planning, and trusted technology partnerships to keep your operations reliable, secure, and future-ready.',
     features: ['Managed Maintenance Services', 'Business Continuity and Disaster Recovery Consulting', 'Technology Partnerships'],
@@ -55,7 +58,7 @@ const SERVICES = [
     },
   },
   {
-    icon: <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>,
+    icon: <img src={softwareServicesIcon} alt="" className="service-card__icon-img" />,
     title: 'Software Services',
     desc: 'Empowering enterprises to optimize performance with customized ERP implementations and managed application development — designed for scalability and long-term value.',
     features: ['ERP Implementation', 'Managed App Development', 'Scalable Solutions'],

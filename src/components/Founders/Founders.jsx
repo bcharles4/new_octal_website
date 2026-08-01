@@ -37,9 +37,9 @@ const FOUNDERS = [
     title: 'Service Director',
     image: founder3,
     bio: [
-      'A Project Management Professional (PMP) with over 30 years of IT industry experience, Topets has extensive expertise in service operations, support administration, enterprise account management, IT deployment and maintenance, and IT infrastructure outsourcing and managed services. Prior to joining the company, he spent 28 years with IBM Philippines, where he held various leadership roles in IT services management and service delivery.',
-      'Throughout his career, he successfully managed complex projects involving data center construction and relocation, structured cabling, network systems deployment and integration, hardware and software maintenance, systems management implementation, storage systems installation and migration, high-availability solutions, and business continuity and disaster recovery services.',
-      'His core competencies include project management, service delivery, mainframe hardware support, people leadership, process improvement, and cross-functional team management. He is currently completing the requirements to become a Certified Business Continuity Professional (CBCP), having successfully passed the certification examinations.',
+      'A Project Management Professional (PMP) and Certified Business Continuity Professional (CBCP) with over 30 years of IT industry experience, Topets has extensive expertise in service operations, support administration, enterprise account management, IT deployment and maintenance, and IT infrastructure outsourcing and managed services. Prior to joining the company, he spent 28 years with IBM Philippines, where he held various leadership roles in IT services management and service delivery.',
+      'Throughout his career, he successfully managed complex projects involving data center construction and relocation, structured cabling, network systems deployment and integration, hardware and software maintenance, systems management implementation, storage systems installation and migration, high-availability solutions, and business continuity and disaster recovery program.',
+      'He is recognized for his strong leadership, customer-focused approach, and commitment to delivering reliable, high-quality IT services that support business objectives while driving continuous improvement and operational resilience.',
     ],
   },
   {
