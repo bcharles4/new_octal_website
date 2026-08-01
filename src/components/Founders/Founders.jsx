@@ -107,14 +107,29 @@ function FounderModal({ founder, onClose }) {
           </svg>
         </button>
 
-        <div className="founder-modal__body">
-          <span className="about__label">Founder Profile</span>
-          <h3 id="founder-modal-name" className="founder-modal__name">{founder.name}</h3>
-          <span className="founder-modal__title">{founder.title}</span>
-          <div className="founder-modal__bio">
-            {founder.bio.map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
+        <div className="founder-modal__layout">
+          <aside className="founder-modal__media">
+            <img
+              src={founder.image}
+              alt={founder.name}
+              className="founder-modal__image"
+            />
+            <div className="founder-modal__badge">
+              <span className="founder-modal__badge-label">Leadership</span>
+              <span className="founder-modal__badge-role">{founder.title}</span>
+            </div>
+          </aside>
+
+          <div className="founder-modal__body">
+            <span className="founder-modal__eyebrow">Founder Profile</span>
+            <h3 id="founder-modal-name" className="founder-modal__name">{founder.name}</h3>
+            <span className="founder-modal__title">{founder.title}</span>
+            <span className="founder-modal__divider" aria-hidden="true" />
+            <div className="founder-modal__bio">
+              {founder.bio.map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))}
+            </div>
           </div>
         </div>
       </div>
