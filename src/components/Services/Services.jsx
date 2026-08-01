@@ -132,13 +132,16 @@ export default function Services() {
       </div>
 
       <div className="services__grid">
-        {SERVICES.map((service) => (
+        {SERVICES.map((service, index) => (
           <button
             key={service.title}
             className="service-card glass-card"
             type="button"
             onClick={() => setSelectedService(service)}
           >
+            <span className="service-card__index" aria-hidden="true">
+              {String(index + 1).padStart(2, '0')}
+            </span>
             <div className="service-card__icon">{service.icon}</div>
             <h3 className="service-card__title">{service.title}</h3>
             <p className="service-card__desc">{service.desc}</p>
@@ -150,7 +153,25 @@ export default function Services() {
                 </li>
               ))}
             </ul>
-            <span className="service-card__cta">View Details</span>
+            <span className="service-card__cta">
+              View Details
+              <svg
+                className="service-card__cta-arrow"
+                width="14"
+                height="14"
+                viewBox="0 0 14 14"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2 7h10M8 3l4 4-4 4"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
           </button>
         ))}
       </div>
@@ -168,21 +189,35 @@ export default function Services() {
             aria-modal="true"
             aria-label={`${selectedService.title} details`}
           >
-            <div className="services-modal__header">
-              <h3>{selectedService.title}</h3>
-              <button
-                type="button"
-                className="services-modal__close"
-                onClick={() => setSelectedService(null)}
-                aria-label="Close details"
-              >
-                ×
-              </button>
-            </div>
-            <p className="services-modal__intro">{selectedService.details.intro}</p>
+            <button
+              type="button"
+              className="services-modal__close"
+              onClick={() => setSelectedService(null)}
+              aria-label="Close details"
+            >
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                <path
+                  d="M15 5L5 15M5 5l10 10"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
+
+            <header className="services-modal__banner">
+              <span className="services-modal__eyebrow">Our Solution</span>
+              <h3 className="services-modal__title">{selectedService.title}</h3>
+              <span className="services-modal__divider" aria-hidden="true" />
+              <p className="services-modal__intro">{selectedService.details.intro}</p>
+            </header>
+
             <div className="services-modal__content">
-              {selectedService.details.items.map((item) => (
+              {selectedService.details.items.map((item, i) => (
                 <div key={item.title} className="services-modal__item">
+                  <span className="services-modal__item-index" aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
                   <h4>{item.title}</h4>
                   <p>{item.text}</p>
                 </div>

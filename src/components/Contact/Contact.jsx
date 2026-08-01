@@ -190,7 +190,7 @@ export default function Contact() {
             </div>
             <div>
               <h4>Office Hours</h4>
-              <p>Mon - Fri, 9AM - 6PM PHT</p>
+              <p> Monday – Friday, 9:00 AM – 6:00 PM PHT</p>
             </div>
           </div>
 
@@ -201,8 +201,8 @@ export default function Contact() {
             </div>
             <div>
               <h4>Phone</h4>
-              <p>7006-5975</p>
-              <p>8365-3311</p>
+              <p>+632 7006 5975</p>
+              <p>+632 8365 3311</p>
             </div>
           </div>
 
