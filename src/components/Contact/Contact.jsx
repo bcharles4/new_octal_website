@@ -87,7 +87,15 @@ export default function Contact() {
               <p>We'll get back to you within 24 hours.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="contact__form">
+            <form onSubmit={handleSubmit} className="contact__form" autoComplete="off">
+              <input
+                type="text"
+                name="company"
+                aria-hidden="true"
+                tabIndex={-1}
+                autoComplete="off"
+                style={{ position: 'absolute', left: '-9999px', opacity: 0 }}
+              />
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="firstName">First Name</label>
@@ -97,7 +105,8 @@ export default function Contact() {
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
-                    placeholder="John"
+                    autoComplete="new-password"
+                    inputMode="text"
                     required
                   />
                 </div>
@@ -109,7 +118,8 @@ export default function Contact() {
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
-                    placeholder="Doe"
+                    autoComplete="new-password"
+                    inputMode="text"
                     required
                   />
                 </div>
@@ -122,7 +132,8 @@ export default function Contact() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="john@company.com"
+                  autoComplete="new-password"
+                  inputMode="email"
                   required
                 />
               </div>
@@ -135,6 +146,8 @@ export default function Contact() {
                   value={formData.phone}
                   onChange={handleChange}
                   placeholder="+63 9XX XXX XXXX"
+                  autoComplete="new-password"
+                  inputMode="tel"
                   required
                 />
               </div>
@@ -145,7 +158,7 @@ export default function Contact() {
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
-                  placeholder="Tell us about your project..."
+                  autoComplete="new-password"
                   rows={4}
                   required
                 />

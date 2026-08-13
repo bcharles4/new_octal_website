@@ -18,42 +18,36 @@ const ARTICLES = [
     tag: 'Disaster Recovery',
     title: 'Disaster Recovery Introduction Seminar',
     excerpt: 'We successfully conducted our Disaster Recovery Introduction Seminar, equipping participants with valuable insights on how businesses can prepare, respond, and recover from unexpected disruptions.',
-    date: 'Feb 6, 2026',
     image: drisImg,
   },
   {
     tag: 'Technology',
     title: 'Project Team Dynamics Training',
     excerpt:'Octal Philippines Inc. conducted a training session for its employees titled “Project Team Dynamics: Using the Myers-Briggs Type Indicator (MBTI) to Understand Work Styles and Communication” last May 2, 2025.',
-    date: 'May 02, 2025',
     image: projectTeam,
   },
   {
     tag: 'Software',
     title: 'Project Management Workshop',
     excerpt:'The workshop provided valuable knowledge and practical strategies that participants can immediately apply in both their professional responsibilities and everyday endeavors.',
-    date: 'Feb 08, 2024',
     image: projectManagement,
   },
   {
     tag: 'Recreational',
     title: 'A Day of Fun and Team Bonding',
     excerpt:'Good times, bonds created, and teamwork strengthened during the Octal Summer Outing 2023! Core memory unlocked indeed, as the team had a fun summer adventure and activities at Botolan, Zambales.',
-    date: 'Jan 5, 2026',
     image: outing,
   },
   {
     tag: 'Events',
     title: 'Asia Partner of the Year 2017',
     excerpt: 'Cloudqwest and Octal Philippines were recognized by Acumatica as the Asia Partner of the Year 2017, a prestigious award that celebrates their outstanding sales achievements, unwavering commitment to customer success, and excellence in delivering Acumatica ERP solutions throughout the region.',
-    date: 'Dec, 2017',
     image: accumatica,
   },
   {
     tag: 'Environments',
     title: 'Octal Philippines Bamboo Planting Initiative',
     excerpt: 'Octal together with Litus Software and Sun Micro Development Concepts Inc. These enthusiastic employees spend their weekend giving back to nature by planting Bamboos as their pledge for a greener community.',
-    date: 'July, 2018',
     image: bambooPlanting,
   },
 ];
@@ -107,11 +101,6 @@ export default function Insights() {
               <div className="insight-card__tag">{article.tag}</div>
               <h3 className="insight-card__title">{article.title}</h3>
               <p className="insight-card__excerpt">{article.excerpt}</p>
-              <div className="insight-card__meta">
-                <span>{article.date}</span>
-                <span className="insight-card__dot">·</span>
-                <span>{article.readTime}</span>
-              </div>
             </div>
           </article>
         ))}

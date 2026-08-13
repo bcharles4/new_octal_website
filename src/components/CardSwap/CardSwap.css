@@ -28,12 +28,31 @@
 
 @media (max-width: 768px) {
   .card-swap-container {
-    transform: scale(0.75) translate(25%, 25%);
+    transform: scale(0.75) translate(25%, 22%);
+    transform-origin: bottom right;
   }
 }
 
 @media (max-width: 480px) {
   .card-swap-container {
-    transform: scale(0.55) translate(25%, 25%);
+    position: relative;
+    bottom: auto;
+    right: auto;
+    transform: scale(0.6);
+    transform-origin: center center;
+    margin: 0 auto;
+    width: min(100%, 255px);
+    height: 180px;
+    overflow: visible;
+  }
+
+  .card-swap-container .card {
+    width: 255px !important;
+    height: 180px !important;
+    transform-origin: bottom right;
+  }
+
+  .card {
+    border-radius: 12px;
   }
 }

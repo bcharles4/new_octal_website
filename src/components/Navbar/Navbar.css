@@ -30,6 +30,22 @@
   margin-left: auto;
 }
 
+.navbar__menu-toggle {
+  display: none;
+  pointer-events: auto;
+  background: rgba(10, 15, 13, 0.55);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
 .navbar--scrolled .navbar__pill {
   background: rgba(10, 15, 13, 0.78);
   border-color: rgba(89, 161, 74, 0.18);
@@ -111,15 +127,32 @@
     top: 0.75rem;
     padding: 0 0.75rem;
     gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .navbar__menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
   }
 
   .navbar__pill {
+    display: none;
+    width: 100%;
+    max-width: none;
+    order: 3;
+    margin-left: 0;
+    flex-wrap: wrap;
     gap: 0.5rem;
     padding: 0.45rem 0.55rem;
-    max-width: calc(100% - 4rem);
-    overflow-x: auto;
+    overflow: hidden;
     scrollbar-width: none;
     -ms-overflow-style: none;
+  }
+
+  .navbar__pill--open {
+    display: flex;
   }
 
   .navbar__pill::-webkit-scrollbar {
@@ -128,6 +161,10 @@
 
   .navbar__logo {
     height: 28px;
+  }
+
+  .navbar__brand {
+    padding: 0.2rem 0.25rem;
   }
 
   .navbar__link {

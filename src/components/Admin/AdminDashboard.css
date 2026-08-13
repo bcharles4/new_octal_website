@@ -21,6 +21,12 @@
   display: flex;
   align-items: center;
   gap: 0.85rem;
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
 }
 
 .admin-dash__logo {
@@ -327,4 +333,27 @@
   margin-top: 0.5rem;
   padding-top: 1rem;
   border-top: 1px solid rgba(255,255,255,0.07);
+}
+
+@media (max-width: 768px) {
+  .admin-dash__header {
+    padding: 1rem;
+  }
+
+  .admin-dash__main {
+    padding: 1rem;
+  }
+
+  .admin-dash__section-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-dash__header-actions {
+    width: 100%;
+  }
+
+  .admin-dash__btn {
+    width: 100%;
+  }
 }

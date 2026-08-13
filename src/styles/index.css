@@ -286,3 +286,23 @@ a:hover {
   border-color: rgba(89, 161, 74, 0.3);
   background: rgba(89, 161, 74, 0.06);
 }
+
+@media (max-width: 768px) {
+  .section {
+    min-height: auto;
+    padding: 80px 1rem;
+  }
+
+  .section-title {
+    font-size: clamp(1.7rem, 8vw, 2.4rem);
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .glass-card {
+    padding: 1.5rem;
+  }
+}

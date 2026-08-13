@@ -32,10 +32,10 @@ export default function AdminLogin() {
   return (
     <div className="admin-login">
       <div className="admin-login__card">
-        <div className="admin-login__logo">
+        <button type="button" className="admin-login__logo" onClick={() => navigate('/')}>
           <div className="admin-login__octahedron">⬡</div>
           <span className="admin-login__brand">Octal Philippines</span>
-        </div>
+        </button>
         <h1 className="admin-login__title">Admin Access</h1>
         <p className="admin-login__subtitle">Enter your admin password to continue</p>
 
@@ -61,7 +61,7 @@ export default function AdminLogin() {
           </button>
         </form>
 
-        <button className="admin-login__back" onClick={() => navigate('/')}>
+        <button type="button" className="admin-login__back" onClick={() => navigate('/')}>
           ← Back to website
         </button>
       </div>

@@ -14,9 +14,10 @@ const EMPTY_JOB = {
 };
 
 function authHeaders() {
+  const token = localStorage.getItem('admin_token');
   return {
     'Content-Type': 'application/json',
-    Authorization: `Bearer ${localStorage.getItem('admin_token')}`,
+    Authorization: `Bearer ${token}`,
   };
 }
 
@@ -32,7 +33,7 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [modal, setModal] = useState(null); // null | 'create' | { ...job }
+  const [modal, setModal] = useState(null);
   const [form, setForm] = useState(EMPTY_JOB);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -42,14 +43,19 @@ export default function AdminDashboard() {
     setLoading(true);
     try {
       const res = await fetch('/api/admin/jobs', { headers: authHeaders() });
-      if (res.status === 401) { logout(); return; }
+      if (res.status === 401) {
+        logout();
+        return;
+      }
       setJobs(await res.json());
     } finally {
       setLoading(false);
     }
   }
 
-  useEffect(() => { fetchJobs(); }, []);
+  useEffect(() => {
+    fetchJobs();
+  }, []);
 
   function logout() {
     localStorage.removeItem('admin_token');
@@ -116,16 +122,18 @@ export default function AdminDashboard() {
 
   return (
     <div className="admin-dash">
-      {/* Header */}
       <header className="admin-dash__header">
-        <div className="admin-dash__brand">
+        <button type="button" className="admin-dash__brand" onClick={() => navigate('/')}>
           <img src={octalLogo} alt="Octal Logo" className="admin-dash__logo" />
           <div>
             <h1 className="admin-dash__title">Admin Dashboard</h1>
             <p className="admin-dash__sub">Octal Philippines Inc. · Careers Management</p>
           </div>
-        </div>
+        </button>
         <div className="admin-dash__header-actions">
+          <button className="admin-dash__btn admin-dash__btn--ghost" onClick={() => navigate('/')}>
+            Home
+          </button>
           <button className="admin-dash__btn admin-dash__btn--primary" onClick={openCreate}>
             + Create Job
           </button>
@@ -138,7 +146,6 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      {/* Jobs table */}
       <main className="admin-dash__main">
         <div className="admin-dash__section-header">
           <h2 className="admin-dash__section-title">Job Listings</h2>
@@ -181,7 +188,6 @@ export default function AdminDashboard() {
         )}
       </main>
 
-      {/* Create / Edit Modal */}
       {modal && (
         <div className="admin-modal__overlay" onClick={() => setModal(null)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
@@ -247,7 +253,6 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Delete confirmation */}
       {deleteConfirm && (
         <div className="admin-modal__overlay" onClick={() => setDeleteConfirm(null)}>
           <div className="admin-modal admin-modal--sm" onClick={(e) => e.stopPropagation()}>
@@ -263,5 +268,3 @@ export default function AdminDashboard() {
     </div>
   );
 }
-
-

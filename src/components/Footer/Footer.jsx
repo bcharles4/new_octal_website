@@ -67,25 +67,25 @@ export default function Footer() {
           <div className="footer__links">
             <div className="footer__col">
               <h4>Navigation</h4>
-              <a href="/#home">Home</a>
-              <a href="/#about">About Us</a>
-              <a href="/#solutions">Solutions</a>
-              <a href="/#connect">Let's Connect</a>
-              <a href="/#insights">Insights</a>
-              <a href="/#jobs">Find a Job</a>
+              <Link to="/">Home</Link>
+              <Link to="/about">About Us</Link>
+              <Link to="/solutions">Solutions</Link>
+              <Link to="/#connect">Let's Connect</Link>
+              <Link to="/#insights">Insights</Link>
+              <Link to="/#jobs">Find a Job</Link>
             </div>
             <div className="footer__col">
               <h4>Solutions</h4>
-              <a href="/#solutions">IT Staffing Solutions</a>
-              <a href="/#solutions">BLISS Infrastructure</a>
-              <a href="/#solutions">Software Services</a>
+              <Link to="/solutions">IT Staffing Solutions</Link>
+              <Link to="/solutions">BLISS Infrastructure</Link>
+              <Link to="/solutions">Software Services</Link>
             </div>
             <div className="footer__col">
               <h4>Connect</h4>
-              <a href="/#connect">LinkedIn</a>
-              <a href="/#connect">GitHub</a>
-              <a href="/#connect">Twitter</a>
-              <a href="/#connect">Facebook</a>
+              <Link to="/#connect">LinkedIn</Link>
+              <Link to="/#connect">GitHub</Link>
+              <Link to="/#connect">Twitter</Link>
+              <Link to="/#connect">Facebook</Link>
             </div>
           </div>
         </div>
@@ -93,7 +93,7 @@ export default function Footer() {
         <div className="footer__bottom">
           <p>© {new Date().getFullYear()} OCTAL PHILIPPINES INC. All rights reserved.</p>
           <div className="footer__bottom-links">
-            <a href="/#home">Privacy Policy</a>
+            <Link to="/privacy-policy">Privacy Policy</Link>
             <Link to="/terms-of-use">Terms of Use</Link>
           </div>
         </div>

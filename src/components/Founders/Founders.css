@@ -129,6 +129,10 @@
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }
+
+  .founders {
+    gap: 3rem;
+  }
 }
 
 /* ============================

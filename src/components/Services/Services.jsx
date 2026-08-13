@@ -132,16 +132,13 @@ export default function Services() {
       </div>
 
       <div className="services__grid">
-        {SERVICES.map((service, index) => (
+        {SERVICES.map((service) => (
           <button
             key={service.title}
             className="service-card glass-card"
             type="button"
             onClick={() => setSelectedService(service)}
           >
-            <span className="service-card__index" aria-hidden="true">
-              {String(index + 1).padStart(2, '0')}
-            </span>
             <div className="service-card__icon">{service.icon}</div>
             <h3 className="service-card__title">{service.title}</h3>
             <p className="service-card__desc">{service.desc}</p>
@@ -206,18 +203,15 @@ export default function Services() {
             </button>
 
             <header className="services-modal__banner">
-              <span className="services-modal__eyebrow">Our Solution</span>
+              <span className="services-modal__eyebrow">Our Solutions</span>
               <h3 className="services-modal__title">{selectedService.title}</h3>
               <span className="services-modal__divider" aria-hidden="true" />
               <p className="services-modal__intro">{selectedService.details.intro}</p>
             </header>
 
             <div className="services-modal__content">
-              {selectedService.details.items.map((item, i) => (
+              {selectedService.details.items.map((item) => (
                 <div key={item.title} className="services-modal__item">
-                  <span className="services-modal__item-index" aria-hidden="true">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
                   <h4>{item.title}</h4>
                   <p>{item.text}</p>
                 </div>

@@ -1,7 +1,7 @@
-import { useEffect, useRef, useMemo } from 'react';
+import { useEffect, useRef, useMemo, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, Stars } from '@react-three/drei';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import CardSwap, { Card } from '../CardSwap/CardSwap';
@@ -173,6 +173,24 @@ export default function Hero() {
   const navigate = useNavigate();
   const clickCountRef = useRef(0);
   const clickTimerRef = useRef(null);
+  const [cardSize, setCardSize] = useState({ width: 380, height: 260, cardDistance: 50, verticalDistance: 55 });
+
+  useEffect(() => {
+    const updateCardSize = () => {
+      const width = window.innerWidth;
+      if (width <= 480) {
+        setCardSize({ width: 255, height: 180, cardDistance: 32, verticalDistance: 38 });
+      } else if (width <= 768) {
+        setCardSize({ width: 300, height: 210, cardDistance: 40, verticalDistance: 45 });
+      } else {
+        setCardSize({ width: 380, height: 260, cardDistance: 50, verticalDistance: 55 });
+      }
+    };
+
+    updateCardSize();
+    window.addEventListener('resize', updateCardSize);
+    return () => window.removeEventListener('resize', updateCardSize);
+  }, []);
 
   const handleSecretClick = () => {
     clickCountRef.current += 1;
@@ -236,16 +254,17 @@ export default function Hero() {
         <h1 id="hero-title" ref={headingRef} className="hero__title">
           <span className="hero__title-line">
             <span ref={titleInnerRef} className="hero__title-inner">
-             YOUR PARTNER IN SUSTAINABLE <span className="hero__title-highlight">GROWTH AND INNOVATION</span>
-            </span>   
+             Your Strategic Partner for <span className="hero__title-highlight">Growth & Innovation</span>
+            </span>
           </span>
         </h1>
         <p ref={subRef} className="hero__subtitle">
-          We don’t just deliver solutions — we build partnerships. Our commitment is to help organizations harness technology, empower people, and achieve measurable results that last.        </p>
+          We partner with organizations to deliver technology, talent, and services that support measurable growth, operational excellence, and long-term value.
+        </p>
         <div ref={ctaRef} className="hero__cta">
-          <a className="btn-primary" href="#solutions">
-            Explore
-          </a>
+          <Link className="btn-primary" to="/solutions">
+            Explore Solutions
+          </Link>
           <button
             type="button"
             className="learn-more"
@@ -258,7 +277,7 @@ export default function Hero() {
             <span className="circle" aria-hidden="true">
               <span className="icon arrow" />
             </span>
-            <span className="button-text">Let's Connect</span>
+            <span className="button-text">Contact Us</span>
           </button>
         </div>
       </div>
@@ -271,10 +290,10 @@ export default function Hero() {
       {/* RIGHT COLUMN — motivational quote card stack (CardSwap) */}
       <div className="hero__cards">
         <CardSwap
-          width={380}
-          height={260}
-          cardDistance={50}
-          verticalDistance={55}
+          width={cardSize.width}
+          height={cardSize.height}
+          cardDistance={cardSize.cardDistance}
+          verticalDistance={cardSize.verticalDistance}
           delay={4500}
           pauseOnHover
           skewAmount={5}
@@ -317,11 +336,10 @@ export default function Hero() {
       <button
         type="button"
         className="hero__scroll-indicator"
-        onClick={() => document.getElementById('solutions')?.scrollIntoView({ behavior: 'smooth' })}
-        aria-label="Scroll to solutions"
+        onClick={() => document.getElementById('insights')?.scrollIntoView({ behavior: 'smooth' })}
+        aria-label="Scroll to insights"
       >
         <div className="hero__scroll-line" aria-hidden="true" />
-        <span aria-hidden="true">Scroll</span>
       </button>
     </section>
   );

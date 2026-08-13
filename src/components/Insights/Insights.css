@@ -83,21 +83,6 @@
   flex: 1;
 }
 
-.insight-card__meta {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.75rem;
-  color: var(--text-dark-muted);
-  padding-top: 0.8rem;
-  border-top: 1px solid rgba(89, 161, 74, 0.1);
-}
-
-.insight-card__dot {
-  color: var(--primary);
-  font-weight: 700;
-}
-
 @media (max-width: 968px) {
   .insights__grid {
     grid-template-columns: repeat(2, 1fr);
@@ -107,5 +92,9 @@
 @media (max-width: 580px) {
   .insights__grid {
     grid-template-columns: 1fr;
+  }
+
+  .insights__header .section-subtitle {
+    font-size: 0.95rem;
   }
 }

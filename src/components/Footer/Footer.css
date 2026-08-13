@@ -111,4 +111,8 @@
     gap: 1rem;
     text-align: center;
   }
+
+  .footer__links {
+    grid-template-columns: 1fr;
+  }
 }

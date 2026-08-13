@@ -83,7 +83,7 @@ export default function About() {
         <div ref={imageRef} className="about__visual-col">
           <div className="about__visual">
             <div className="about__hex-grid">
-              {[...Array(7)].map((_, i) => (
+              {[...Array(8)].map((_, i) => (
                 <div key={i} className="about__hex" style={{ animationDelay: `${i * 0.2}s` }}>
                   <div className="about__hex-inner" />
                 </div>
