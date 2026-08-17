@@ -12,9 +12,11 @@ import PrivacyPolicy from './components/PrivacyPolicy/PrivacyPolicy';
 import TermsOfUse from './components/TermsOfUse/TermsOfUse';
 import AdminLogin from './components/Admin/AdminLogin';
 import AdminDashboard from './components/Admin/AdminDashboard';
+import Jobs from './components/Jobs/Jobs';
+
 
 const Insights = lazy(() => import('./components/Insights/Insights'));
-const Jobs = lazy(() => import('./components/Jobs/Jobs'));
+// const Jobs = lazy(() => import('./components/Jobs/Jobs'));
 const Contact = lazy(() => import('./components/Contact/Contact'));
 
 function ProtectedRoute({ children }) {
@@ -73,9 +75,7 @@ function HomePage() {
       <SiteLayout>
         <Hero />
         <Suspense fallback={null}>
-          <Insights />
-          <Jobs />
-          <Contact />
+          <About />
         </Suspense>
       </SiteLayout>
     </>
@@ -86,11 +86,8 @@ function AboutPage() {
   return (
     <SiteLayout>
       <PageHero
-        eyebrow="Octal Philippines"
         title="About Us"
-        subtitle="Two decades of engineering, staffing, and infrastructure experience — and the people who built it."
-      />
-      <About />
+        subtitle="Octal Philippines is a trusted provider of technology and software solutions, dedicated to assisting businesses with innovation, optimization, and growth. Established in 2002 by Silicon Valley engineers, we offer comprehensive IT and consultancy services, ranging from staffing to managed solutions. We connect highly skilled IT professionals with prominent clients across diverse industries."      />
       <Founders />
     </SiteLayout>
   );
@@ -100,14 +97,38 @@ function SolutionsPage() {
   return (
     <SiteLayout>
       <PageHero
-        eyebrow="Octal Philippines"
-        title="Solutions"
+        title="Our Solutions"
         subtitle="Technology, talent, and managed services designed around how your organization actually works."
       />
       <Services />
     </SiteLayout>
   );
 }
+
+function InsightPage() {
+  return (
+    <SiteLayout>
+      <PageHero
+        title="Insights & Resources"
+        subtitle="Empowering organizations with technology, talent, and services tailored to the way you work."
+      />
+      <Insights />
+    </SiteLayout>
+  );
+}
+
+function CareersPage() {
+  return (
+    <SiteLayout>
+      <PageHero
+        title="Find your Job"
+        subtitle="Empowering organizations with technology, talent, and services tailored to the way you work."
+      />
+      <Jobs />
+    </SiteLayout>
+  );
+}
+
 
 function TermsPage() {
   return (
@@ -133,6 +154,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/solutions" element={<SolutionsPage />} />
+        <Route path="/insights" element={<InsightPage/>} />
+        <Route path="/careers" element={<CareersPage/>} />
         <Route path="/privacy-policy" element={<PrivacyPage />} />
         <Route path="/terms-of-use" element={<TermsPage />} />
         <Route path="/admin/login" element={<AdminLogin />} />

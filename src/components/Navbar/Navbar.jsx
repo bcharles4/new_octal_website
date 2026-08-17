@@ -9,8 +9,8 @@ const NAV_ITEMS = [
   { label: 'Home', path: '/' },
   { label: 'About', path: '/about' },
   { label: 'Solutions', path: '/solutions' },
-  { label: 'Insights', path: '/', hash: 'insights' },
-  { label: 'Careers', path: '/', hash: 'jobs' },
+  { label: 'Insights', path: '/insights' },
+  { label: 'Careers', path: '/careers'},
   { label: 'Contact Us', path: '/', hash: 'connect' },
 ];
 

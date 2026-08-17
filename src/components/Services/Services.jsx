@@ -123,7 +123,6 @@ export default function Services() {
     <section id="solutions" ref={sectionRef} className="services section section--light">
       <div className="services__header">
         <span className="about__label">What We Do</span>
-        <h2 className="section-title">Our Solutions</h2>
         <p className="section-subtitle">
           Innovative, reliable, and scalable technology solutions designed to
           meet diverse organizational needs — from staffing and infrastructure

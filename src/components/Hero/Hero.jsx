@@ -259,7 +259,7 @@ export default function Hero() {
           </span>
         </h1>
         <p ref={subRef} className="hero__subtitle">
-          We partner with organizations to deliver technology, talent, and services that support measurable growth, operational excellence, and long-term value.
+          We don’t just deliver solutions — we build partnerships. Our commitment is to help organizations harness technology, empower people, and achieve measurable results that last.
         </p>
         <div ref={ctaRef} className="hero__cta">
           <Link className="btn-primary" to="/solutions">

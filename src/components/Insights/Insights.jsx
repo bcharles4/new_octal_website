@@ -81,7 +81,7 @@ export default function Insights() {
     <section id="insights" ref={sectionRef} className="insights section section--light">
       <div className="insights__header">
         <span className="about__label">Knowledge Hub</span>
-        <h2 className="section-title">Insights & Resources</h2>
+        <h2 className="section-title"></h2>
         <p className="section-subtitle" style={{ margin: '1rem auto 0', textAlign: 'center' }}>
           Every milestone tells a story. Stay informed with our latest news, expert insights,
           and company events as we celebrate achievements, embrace innovation, strengthen

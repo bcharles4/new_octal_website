@@ -39,7 +39,7 @@
 .page-hero__title {
   font-size: clamp(2.4rem, 6vw, 4rem);
   line-height: 1.1;
-  background: linear-gradient(135deg, var(--primary), var(--text-light));
+  background: white;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -48,7 +48,7 @@
 .page-hero__subtitle {
   margin-top: 1.25rem;
   max-width: 640px;
-  color: var(--text-muted);
+  color: white;
   font-size: 1.05rem;
   line-height: 1.7;
 }
