@@ -11,7 +11,7 @@ const NAV_ITEMS = [
   { label: 'Solutions', path: '/solutions' },
   { label: 'Insights', path: '/insights' },
   { label: 'Careers', path: '/careers'},
-  { label: 'Contact Us', path: '/', hash: 'connect' },
+  { label: 'Contact Us', path: '/contact' },
 ];
 
 const HOME_SECTIONS = ['home', 'insights', 'jobs', 'connect'];

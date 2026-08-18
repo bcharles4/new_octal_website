@@ -121,10 +121,23 @@ function CareersPage() {
   return (
     <SiteLayout>
       <PageHero
-        title="Find your Job"
-        subtitle="Empowering organizations with technology, talent, and services tailored to the way you work."
+        title="Build Your Career with Us"
+        subtitle="Combining technology, expertise, and personalized services to help organizations — and people — thrive."
       />
       <Jobs />
+    </SiteLayout>
+  );
+}
+
+function ContactPage() {
+  return (
+    <SiteLayout>
+      <PageHero
+       
+      />
+      <Suspense fallback={null}>
+        <Contact />
+      </Suspense>
     </SiteLayout>
   );
 }
@@ -154,6 +167,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/solutions" element={<SolutionsPage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/insights" element={<InsightPage/>} />
         <Route path="/careers" element={<CareersPage/>} />
         <Route path="/privacy-policy" element={<PrivacyPage />} />

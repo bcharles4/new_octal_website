@@ -5,6 +5,13 @@
   padding: 10rem 5% 4.5rem;
 }
 
+/* Transparent WebGL layer painted on top of the existing hero background. */
+.page-hero__pixels {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
 .page-hero__glow {
   position: absolute;
   top: -35%;
@@ -18,6 +25,7 @@
 
 .page-hero__inner {
   position: relative;
+  z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
 }
