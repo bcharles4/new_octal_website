@@ -352,6 +352,7 @@ const PixelBlast = ({
       if (threeRef.current) {
         const t = threeRef.current;
         t.resizeObserver?.disconnect();
+        t.intersectionObserver?.disconnect();
         cancelAnimationFrame(t.raf);
         t.quad?.geometry.dispose();
         t.material.dispose();
@@ -566,21 +567,6 @@ const PixelBlast = ({
       if (t.touch) t.touch.radiusScale = liquidRadius;
     }
     prevConfigRef.current = cfg;
-    return () => {
-      if (threeRef.current && mustReinit) return;
-      if (!threeRef.current) return;
-      const t = threeRef.current;
-      t.resizeObserver?.disconnect();
-      t.intersectionObserver?.disconnect();
-      cancelAnimationFrame(t.raf);
-      t.quad?.geometry.dispose();
-      t.material.dispose();
-      t.composer?.dispose();
-      t.renderer.dispose();
-      t.renderer.forceContextLoss();
-      if (t.renderer.domElement.parentElement === container) container.removeChild(t.renderer.domElement);
-      threeRef.current = null;
-    };
   }, [
     antialias,
     liquid,
@@ -603,6 +589,31 @@ const PixelBlast = ({
     color,
     speed
   ]);
+
+  /* Disposal lives in its own unmount-only effect. Folding it into the effect
+     above meant its cleanup also fired on every prop change, so it needed a
+     guard to tell a rebuild apart from a real unmount — and that guard matched
+     the unmount case too, so the context was never released. Each mount then
+     leaked one WebGL context, and mobile browsers, which allow only a handful,
+     started killing live ones ("THREE.WebGLRenderer: Context Lost") after a few
+     page visits. Rebuilds already dispose the previous renderer themselves. */
+  useEffect(
+    () => () => {
+      const t = threeRef.current;
+      if (!t) return;
+      t.resizeObserver?.disconnect();
+      t.intersectionObserver?.disconnect();
+      cancelAnimationFrame(t.raf);
+      t.quad?.geometry.dispose();
+      t.material.dispose();
+      t.composer?.dispose();
+      t.renderer.dispose();
+      t.renderer.forceContextLoss();
+      t.renderer.domElement.remove();
+      threeRef.current = null;
+    },
+    [],
+  );
 
   return (
     <div

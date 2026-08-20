@@ -145,7 +145,6 @@ export default function Contact() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="+63 9XX XXX XXXX"
                   autoComplete="new-password"
                   inputMode="tel"
                   required
