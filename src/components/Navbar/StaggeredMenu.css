@@ -1,0 +1,167 @@
+.staggered-menu {
+  pointer-events: auto;
+  margin-left: auto;
+}
+
+.staggered-menu__toggle {
+  position: relative;
+  z-index: 1202;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(10, 15, 13, 0.55);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  padding: 0.55rem 0.9rem;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.staggered-menu--open .staggered-menu__toggle {
+  background: rgba(10, 15, 13, 0.85);
+  border-color: rgba(89, 161, 74, 0.35);
+}
+
+/* The two words sit on top of each other and slide as a pair. */
+.staggered-menu__toggle-label {
+  display: block;
+  height: 1em;
+  overflow: hidden;
+}
+
+.staggered-menu__toggle-word {
+  display: block;
+  height: 1em;
+  line-height: 1;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.staggered-menu--open .staggered-menu__toggle-word {
+  transform: translateY(-1em);
+}
+
+.staggered-menu__icon {
+  position: relative;
+  display: block;
+  width: 18px;
+  height: 12px;
+}
+
+.staggered-menu__icon span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1.5px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.staggered-menu__icon span:first-child {
+  top: 2px;
+}
+
+.staggered-menu__icon span:last-child {
+  bottom: 2px;
+}
+
+.staggered-menu--open .staggered-menu__icon span:first-child {
+  transform: translateY(4.25px) rotate(45deg);
+}
+
+.staggered-menu--open .staggered-menu__icon span:last-child {
+  transform: translateY(-4.25px) rotate(-45deg);
+}
+
+.staggered-menu__panel,
+.staggered-menu__layer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(82vw, 380px);
+  will-change: transform;
+}
+
+.staggered-menu__layer {
+  z-index: 1200;
+  background: var(--primary-dark);
+}
+
+.staggered-menu__layer--two {
+  background: var(--deep);
+}
+
+.staggered-menu__panel {
+  z-index: 1201;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 5.5rem 1.75rem 3rem;
+  background: rgba(6, 10, 8, 0.96);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-left: 1px solid rgba(89, 161, 74, 0.2);
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.45);
+}
+
+.staggered-menu__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Clips each link so it can rise into place. */
+.staggered-menu__item {
+  overflow: hidden;
+}
+
+.staggered-menu__link {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 0.5rem 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 8vw, 2.4rem);
+  font-weight: 600;
+  line-height: 1.15;
+  text-align: left;
+  color: var(--text-light);
+  cursor: pointer;
+  transition: color 0.25s ease;
+}
+
+.staggered-menu__link:hover,
+.staggered-menu__link--active {
+  color: var(--primary);
+}
+
+.staggered-menu__index {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.staggered-menu__link--active .staggered-menu__index {
+  color: var(--primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .staggered-menu__toggle-word,
+  .staggered-menu__icon span {
+    transition-duration: 0.01ms;
+  }
+}

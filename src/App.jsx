@@ -132,9 +132,7 @@ function CareersPage() {
 function ContactPage() {
   return (
     <SiteLayout>
-      <PageHero
-       
-      />
+      <PageHero/>
       <Suspense fallback={null}>
         <Contact />
       </Suspense>

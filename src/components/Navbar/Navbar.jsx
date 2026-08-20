@@ -1,7 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import logo from '../../assets/img/octal-logo-withText.png';
+import StaggeredMenu from './StaggeredMenu';
 import './Navbar.css';
+
+/* Below this width the pill is swapped for the staggered menu. */
+const MOBILE_QUERY = '(max-width: 820px)';
 
 /* Home, About and Solutions are standalone pages; the remaining entries are
    sections that still live on the home page and are reached by anchor. */
@@ -16,15 +20,24 @@ const NAV_ITEMS = [
 
 const HOME_SECTIONS = ['home', 'insights', 'jobs', 'connect'];
 
+const subscribeToMobile = (onChange) => {
+  const media = window.matchMedia(MOBILE_QUERY);
+  media.addEventListener('change', onChange);
+  return () => media.removeEventListener('change', onChange);
+};
+
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
-  const [menuOpen, setMenuOpen] = useState(false);
+  const isMobile = useSyncExternalStore(
+    subscribeToMobile,
+    () => window.matchMedia(MOBILE_QUERY).matches,
+    () => false,
+  );
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const closeMenu = () => setMenuOpen(false);
     const onScroll = () => {
       setScrolled(window.scrollY > 40);
 
@@ -39,16 +52,10 @@ export default function Navbar() {
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', closeMenu);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', closeMenu);
-    };
+    return () => window.removeEventListener('scroll', onScroll);
   }, [location.pathname]);
 
   const goTo = ({ path, hash }) => {
-    setMenuOpen(false);
-
     if (hash) {
       if (location.pathname === path) {
         document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -77,7 +84,6 @@ export default function Navbar() {
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    setMenuOpen(false);
   };
 
   return (
@@ -91,35 +97,25 @@ export default function Navbar() {
         <img src={logo} alt="Octal Philippines" className="navbar__logo" />
       </button>
 
-      <button
-        type="button"
-        className="navbar__menu-toggle"
-        onClick={() => setMenuOpen((open) => !open)}
-        aria-expanded={menuOpen}
-        aria-controls="primary-navigation"
-      >
-        Menu
-      </button>
-
-      <nav
-        id="primary-navigation"
-        className={`navbar__pill ${menuOpen ? 'navbar__pill--open' : ''}`}
-        aria-label="Primary navigation"
-      >
-        <ul className="navbar__links">
-          {NAV_ITEMS.map((item) => (
-            <li key={item.label}>
-              <button
-                type="button"
-                className={`navbar__link ${isActive(item) ? 'navbar__link--active' : ''}`}
-                onClick={() => goTo(item)}
-              >
-                {item.label}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      {isMobile ? (
+        <StaggeredMenu items={NAV_ITEMS} isActive={isActive} onSelect={goTo} />
+      ) : (
+        <nav id="primary-navigation" className="navbar__pill" aria-label="Primary navigation">
+          <ul className="navbar__links">
+            {NAV_ITEMS.map((item) => (
+              <li key={item.label}>
+                <button
+                  type="button"
+                  className={`navbar__link ${isActive(item) ? 'navbar__link--active' : ''}`}
+                  onClick={() => goTo(item)}
+                >
+                  {item.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )}
     </header>
   );
 }
