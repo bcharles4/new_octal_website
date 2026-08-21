@@ -6,6 +6,7 @@ import Hero from './components/Hero/Hero';
 import PageHero from './components/PageHero/PageHero';
 import About from './components/About/About';
 import Founders from './components/Founders/Founders';
+import CoreValues from './components/CoreValues/CoreValues';
 import Services from './components/Services/Services';
 import Footer from './components/Footer/Footer';
 import PrivacyPolicy from './components/PrivacyPolicy/PrivacyPolicy';
@@ -88,6 +89,7 @@ function AboutPage() {
       <PageHero
         title="About Us"
         subtitle="Octal Philippines is a trusted provider of technology and software solutions, dedicated to assisting businesses with innovation, optimization, and growth. Established in 2002 by Silicon Valley engineers, we offer comprehensive IT and consultancy services, ranging from staffing to managed solutions. We connect highly skilled IT professionals with prominent clients across diverse industries."      />
+      <CoreValues />
       <Founders />
     </SiteLayout>
   );

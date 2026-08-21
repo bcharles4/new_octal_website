@@ -82,10 +82,11 @@ export default function Footer() {
             </div>
             <div className="footer__col">
               <h4>Connect</h4>
-              <Link to="/#connect">LinkedIn</Link>
-              <Link to="/#connect">GitHub</Link>
-              <Link to="/#connect">Twitter</Link>
-              <Link to="/#connect">Facebook</Link>
+              <Link to="https://www.linkedin.com/company/octal-phils-inc/">LinkedIn</Link>
+              <Link to="https://www.instagram.com/octal_ph/">Instagram</Link>
+              <Link to="https://www.facebook.com/octalph">Facebook</Link>
+              <Link to="https://www.tiktok.com/@octalphilippinesinc">TikTok</Link>
+              
             </div>
           </div>
         </div>
