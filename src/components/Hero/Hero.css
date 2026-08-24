@@ -20,6 +20,10 @@
   pointer-events: auto;
 }
 
+/* Sits above the canvas, so it has to stay transparent to the pointer: the
+   spacer alone opting out only drops the click through to this grid, which
+   then swallows it and leaves the octahedron behind it unclickable. Each
+   interactive column takes its own events back below. */
 .hero__container {
   position: relative;
   z-index: 2;
@@ -30,10 +34,12 @@
   grid-template-columns: 1fr 0.6fr 1fr;
   align-items: center;
   gap: 2rem;
+  pointer-events: none;
 }
 
 .hero__content {
   max-width: 520px;
+  pointer-events: auto;
 }
 
 .hero__spacer {
@@ -46,6 +52,7 @@
   width: 100%;
   min-height: 340px;
   align-self: center;
+  pointer-events: auto;
 }
 
 .hero-card__body {
@@ -129,133 +136,202 @@
 .hero__cta {
   display: flex;
   gap: 1rem;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: flex-start;
 }
 
-.hero__cta .btn-outline {
-  text-transform: uppercase;
-  letter-spacing: 0;
-  font-weight: 500;
-}
+/* ---------------------------------------------------------------------------
+   Hero call-to-action pair.
 
-.hero__cta .btn-primary,
-.hero__cta .btn-outline {
-  text-decoration: none;
-}
-
-/* "Let's Connect" button — animated circle expands on hover */
-.learn-more {
+   Both buttons share one shell so the primary and the secondary read as a set:
+   same pill, same type, same easing — only the fill separates them. Everything
+   that moves is transform or opacity, and every hover rule lives behind a
+   (hover: hover) query so a touch device never latches into a hover state it
+   has no way to leave. --mx/--my are written by trackCta in Hero.jsx.
+   --------------------------------------------------------------------------- */
+.hero-cta {
   position: relative;
+  isolation: isolate;
   display: inline-flex;
   align-items: center;
-  cursor: pointer;
-  outline: none;
-  border: 0;
-  vertical-align: middle;
-  text-decoration: none;
-  background: transparent;
-  padding: 0;
-  font-size: inherit;
-  font-family: inherit;
-  width: 13rem;
-  height: 3rem;
-  flex-shrink: 0;
-  overflow: hidden;
+  justify-content: center;
+  gap: 0.7rem;
+  min-height: 3rem;
+  padding: 0 1.6rem;
+  border: 1px solid transparent;
   border-radius: 999px;
-}
-
-.learn-more .circle {
-  transition: width 0.45s cubic-bezier(0.65, 0, 0.076, 1),
-              background 0.45s cubic-bezier(0.65, 0, 0.076, 1),
-              box-shadow 0.45s cubic-bezier(0.65, 0, 0.076, 1);
-  position: absolute;
-  inset: 0 auto 0 0;
-  display: block;
-  width: 3rem;
-  height: 3rem;
-  background: #ffffff;
-  border-radius: 999px;
-  z-index: 1;
-}
-
-.learn-more .circle .icon {
-  transition: transform 0.45s cubic-bezier(0.65, 0, 0.076, 1),
-              background 0.45s cubic-bezier(0.65, 0, 0.076, 1);
-  position: absolute;
-  top: 50%;
-  left: 0.9rem;
-  transform: translateY(-50%);
-  background: none;
-}
-
-.learn-more .circle .icon.arrow {
-  width: 1.125rem;
-  height: 0.125rem;
-  background: var(--primary);
-}
-
-.learn-more .circle .icon.arrow::before {
-  position: absolute;
-  content: "";
-  top: -0.29rem;
-  right: 0.0625rem;
-  width: 0.625rem;
-  height: 0.625rem;
-  border-top: 0.125rem solid var(--primary);
-  border-right: 0.125rem solid var(--primary);
-  transform: rotate(45deg);
-  transition: border-color 0.45s cubic-bezier(0.65, 0, 0.076, 1);
-}
-
-.learn-more .button-text {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  padding-left: 3rem;
-  padding-right: 0.75rem;
-  color: var(--primary);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
   font-weight: 700;
-  line-height: 1;
-  text-align: center;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.8rem;
-  transition: color 0.35s cubic-bezier(0.65, 0, 0.076, 1);
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1),
+    box-shadow 0.35s ease,
+    background-color 0.35s ease,
+    border-color 0.35s ease,
+    color 0.35s ease;
 }
 
-.learn-more:hover .circle {
+/* Keeps the button itself as the event target, so the handler can read
+   offsetX/offsetY without measuring anything. */
+.hero-cta__label,
+.hero-cta__icon {
+  pointer-events: none;
+}
+
+/* Cursor spotlight. The negative z-index paints it over the fill but under the
+   label; `isolation` above stops it escaping into the hero's stack. */
+.hero-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    7rem circle at var(--mx, 50%) var(--my, 50%),
+    var(--cta-spot, rgba(255, 255, 255, 0.3)),
+    transparent 65%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* One-shot sheen. Driven by an animation rather than a transition so it never
+   rewinds back across the button when the pointer leaves. */
+.hero-cta::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  z-index: -1;
+  width: 45%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-18deg);
+  opacity: 0;
+}
+
+.hero-cta__icon {
+  display: grid;
+  width: 1.05rem;
+  height: 1.05rem;
+  overflow: hidden;
+}
+
+.hero-cta__icon svg {
+  grid-area: 1 / 1;
   width: 100%;
-  background: var(--primary);
-  box-shadow: 0 8px 24px rgba(89, 161, 74, 0.35);
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.65, 0, 0.076, 1);
 }
 
-.learn-more:hover .circle .icon.arrow {
-  background: #ffffff;
-  transform: translate(1rem, -50%);
+.hero-cta__icon svg + svg {
+  transform: translateX(-150%);
 }
 
-.learn-more:hover .circle .icon.arrow::before {
-  border-top-color: #ffffff;
-  border-right-color: #ffffff;
+.hero-cta--primary {
+  background: linear-gradient(135deg, var(--primary) 0%, #40803a 55%, var(--accent) 100%);
+  color: var(--white);
+  box-shadow:
+    0 6px 18px rgba(12, 69, 19, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
-.learn-more:hover .button-text {
-  color: #ffffff;
+.hero-cta--ghost {
+  --cta-spot: rgba(138, 219, 122, 0.28);
+  background: rgba(89, 161, 74, 0.08);
+  border-color: rgba(89, 161, 74, 0.45);
+  color: var(--text-light);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
 }
 
-.learn-more:focus-visible {
+@media (hover: hover) {
+  .hero-cta:hover {
+    transform: translateY(-2px);
+  }
+
+  .hero-cta:hover::before {
+    opacity: 1;
+  }
+
+  .hero-cta:hover::after {
+    animation: hero-cta-sheen 0.75s ease;
+  }
+
+  .hero-cta:hover .hero-cta__icon svg {
+    transform: translateX(150%);
+  }
+
+  .hero-cta:hover .hero-cta__icon svg + svg {
+    transform: translateX(0);
+  }
+
+  .hero-cta--primary:hover {
+    box-shadow:
+      0 12px 30px rgba(12, 69, 19, 0.55),
+      0 0 0 1px rgba(138, 219, 122, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  }
+
+  .hero-cta--ghost:hover {
+    background: rgba(89, 161, 74, 0.16);
+    border-color: var(--primary);
+    color: var(--white);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* Touch has no hover to give feedback with, so the press carries it. */
+.hero-cta:active {
+  transform: translateY(1px) scale(0.985);
+}
+
+.hero-cta:focus-visible {
   outline: 2px solid var(--primary);
-  outline-offset: 4px;
+  outline-offset: 3px;
+}
+
+@keyframes hero-cta-sheen {
+  from {
+    opacity: 1;
+    transform: translateX(0) skewX(-18deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(420%) skewX(-18deg);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .learn-more .circle,
-  .learn-more .circle .icon,
-  .learn-more .circle .icon.arrow,
-  .learn-more .button-text {
+  .hero-cta,
+  .hero-cta::before,
+  .hero-cta__icon svg {
     transition: none;
+  }
+
+  .hero-cta:hover,
+  .hero-cta:active {
+    transform: none;
+  }
+
+  .hero-cta:hover::after {
+    animation: none;
+  }
+
+  /* No travel to make, so the second arrow would just sit on top of the first. */
+  .hero-cta__icon svg + svg {
+    display: none;
+  }
+
+  .hero-cta:hover .hero-cta__icon svg {
+    transform: none;
   }
 }
 
@@ -342,28 +418,11 @@
     align-items: center;
   }
 
-  .hero__cta .btn-primary {
-    padding-inline: 1rem;
-    font-size: 0.85rem;
-  }
-
-  .learn-more {
-    width: 11rem;
-    height: 2.6rem;
-  }
-
-  .learn-more .button-text {
+  .hero-cta {
+    min-height: 2.7rem;
+    padding: 0 1.15rem;
+    gap: 0.5rem;
     font-size: 0.72rem;
-    padding-left: 2.6rem;
-  }
-
-  .learn-more .circle {
-    width: 2.6rem;
-    height: 2.6rem;
-  }
-
-  .learn-more .circle .icon {
-    left: 0.75rem;
   }
 }
 
@@ -391,9 +450,7 @@
     gap: 0.75rem;
   }
 
-  .hero__cta .btn-primary,
-  .hero__cta .btn-outline,
-  .learn-more {
+  .hero-cta {
     width: 100%;
   }
 
@@ -420,9 +477,7 @@
     margin-bottom: 1.5rem;
   }
 
-  .hero__cta .btn-primary,
-  .hero__cta .btn-outline,
-  .learn-more {
+  .hero-cta {
     width: 100%;
     justify-content: center;
   }

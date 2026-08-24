@@ -95,7 +95,18 @@ function ParticleField() {
   );
 }
 
-/* Glowing octahedron — centered. Click it 5 times to reach admin login. */
+/* Shared by both hero CTAs: each button stacks two of these so one can leave
+   while its twin arrives, which reads as travel rather than a slide. */
+const ArrowGlyph = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 12h14" />
+    <path d="m12 5 7 7-7 7" />
+  </svg>
+);
+
+/* Glowing octahedron — centered. Click it 8 times to reach admin login. It
+   deliberately gives no hover cue: a pointer cursor would advertise that the
+   shape is clickable, and the whole point is that nobody finds it by accident. */
 function GlowOctahedron({ onSecretClick }) {
   const meshRef = useRef();
 
@@ -111,8 +122,6 @@ function GlowOctahedron({ onSecretClick }) {
       <mesh
         ref={meshRef}
         onClick={(e) => { e.stopPropagation(); onSecretClick(); }}
-        onPointerOver={() => { document.body.style.cursor = 'pointer'; }}
-        onPointerOut={() => { document.body.style.cursor = 'auto'; }}
       >
         <octahedronGeometry args={[1.4, 0]} />
         <meshStandardMaterial
@@ -192,10 +201,19 @@ export default function Hero() {
     return () => window.removeEventListener('resize', updateCardSize);
   }, []);
 
+  /* Feeds the spotlight in Hero.css. The label and icon are pointer-transparent,
+     so the event target is always the button itself and offsetX/offsetY are
+     already button-relative — no getBoundingClientRect on every move. */
+  const trackCta = (event) => {
+    const { offsetX, offsetY } = event.nativeEvent;
+    event.currentTarget.style.setProperty('--mx', `${offsetX}px`);
+    event.currentTarget.style.setProperty('--my', `${offsetY}px`);
+  };
+
   const handleSecretClick = () => {
     clickCountRef.current += 1;
     clearTimeout(clickTimerRef.current);
-    if (clickCountRef.current >= 5) {
+    if (clickCountRef.current >= 8) {
       clickCountRef.current = 0;
       navigate('/admin/login');
     } else {
@@ -262,22 +280,32 @@ export default function Hero() {
           We don’t just deliver solutions — we build partnerships. Our commitment is to help organizations harness technology, empower people, and achieve measurable results that last.
         </p>
         <div ref={ctaRef} className="hero__cta">
-          <Link className="btn-primary" to="/solutions">
-            Explore Solutions
+          <Link
+            className="hero-cta hero-cta--primary"
+            to="/solutions"
+            onPointerMove={trackCta}
+          >
+            <span className="hero-cta__label">Explore Solutions</span>
+            <span className="hero-cta__icon" aria-hidden="true">
+              <ArrowGlyph />
+              <ArrowGlyph />
+            </span>
           </Link>
           <button
             type="button"
-            className="learn-more"
+            className="hero-cta hero-cta--ghost"
+            onPointerMove={trackCta}
             onClick={() =>
               document
                 .getElementById('connect')
                 ?.scrollIntoView({ behavior: 'smooth' })
             }
           >
-            <span className="circle" aria-hidden="true">
-              <span className="icon arrow" />
+            <span className="hero-cta__label">Contact Us</span>
+            <span className="hero-cta__icon" aria-hidden="true">
+              <ArrowGlyph />
+              <ArrowGlyph />
             </span>
-            <span className="button-text">Contact Us</span>
           </button>
         </div>
       </div>
