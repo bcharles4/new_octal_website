@@ -148,20 +148,39 @@
 }
 
 .staggered-menu__index {
-  font-family: var(--font-body);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  /* the link aligns on the baseline, which an svg has none of — centre it. */
+  align-self: center;
+  width: 1em;
+  height: 1em;
+  font-size: 0.7em;
   color: var(--text-muted);
+  opacity: 0.55;
+  transform: translateX(-0.15em);
+  transition: color 0.25s ease, opacity 0.25s ease, transform 0.25s ease;
 }
 
+.staggered-menu__index svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.staggered-menu__link:hover .staggered-menu__index,
+.staggered-menu__link:focus-visible .staggered-menu__index,
 .staggered-menu__link--active .staggered-menu__index {
   color: var(--primary);
+  opacity: 1;
+  transform: translateX(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .staggered-menu__toggle-word,
-  .staggered-menu__icon span {
+  .staggered-menu__icon span,
+  .staggered-menu__index {
     transition-duration: 0.01ms;
   }
 }

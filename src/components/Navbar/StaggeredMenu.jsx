@@ -113,7 +113,12 @@ export default function StaggeredMenu({ items, isActive, onSelect }) {
                 className={`staggered-menu__link ${isActive(item) ? 'staggered-menu__link--active' : ''}`}
                 onClick={() => handleSelect(item)}
               >
-                <span className="staggered-menu__index">{String(index + 1).padStart(2, '0')}</span>
+                <span className="staggered-menu__index" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                  </svg>
+                </span>
                 {item.label}
               </button>
             </li>
