@@ -70,9 +70,9 @@ export default function Footer() {
               <Link to="/">Home</Link>
               <Link to="/about">About Us</Link>
               <Link to="/solutions">Solutions</Link>
-              <Link to="/#connect">Let's Connect</Link>
-              <Link to="/#insights">Insights</Link>
-              <Link to="/#jobs">Find a Job</Link>
+              <Link to="/contact">Let's Connect</Link>
+              <Link to="/insights">Insights</Link>
+              <Link to="/careers">Find a Job</Link>
             </div>
             <div className="footer__col">
               <h4>Solutions</h4>

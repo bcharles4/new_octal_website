@@ -114,10 +114,7 @@ function FounderModal({ founder, onClose }) {
               alt={founder.name}
               className="founder-modal__image"
             />
-            <div className="founder-modal__badge">
-              <span className="founder-modal__badge-label">Leadership</span>
-              <span className="founder-modal__badge-role">{founder.title}</span>
-            </div>
+
           </aside>
 
           <div className="founder-modal__body">
@@ -169,7 +166,6 @@ export default function Founders() {
   return (
     <section id="founders" ref={sectionRef} className="founders section section--light-alt">
       <div className="founders__header" ref={headerRef}>
-        <span className="about__label">Who Leads Us</span>
         <h2 className="section-title">Meet the Founders</h2>
         <p className="section-subtitle">
           The people behind Octal — a team of builders, operators, and technologists

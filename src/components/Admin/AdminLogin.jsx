@@ -1,5 +1,7 @@
-  import { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import GridScan from '../GridScan/GridScan';
+import octalLogo from '../../assets/img/octal-logo-withText.png';
 import './AdminLogin.css';
 
 export default function AdminLogin() {
@@ -21,6 +23,9 @@ export default function AdminLogin() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Login failed.');
       localStorage.setItem('admin_token', data.token);
+      /* Tells the dashboard this arrival is a fresh sign-in, so it shows the
+         credential card once rather than on every visit to /admin. */
+      sessionStorage.setItem('admin_show_pass', '1');
       navigate('/admin');
     } catch (err) {
       setError(err.message);
@@ -31,10 +36,27 @@ export default function AdminLogin() {
 
   return (
     <div className="admin-login">
+      <div className="admin-login__bg" aria-hidden="true">
+        <GridScan
+          sensitivity={0.55}
+          lineThickness={1}
+          linesColor="#2b3a2e"
+          gridScale={0.1}
+          scanColor="#59a14a"
+          scanOpacity={0.45}
+          scanDuration={2.4}
+          scanDelay={1.6}
+          enablePost
+          bloomIntensity={0.6}
+          chromaticAberration={0.002}
+          noiseIntensity={0.01}
+        />
+      </div>
+      <div className="admin-login__veil" aria-hidden="true" />
+
       <div className="admin-login__card">
         <button type="button" className="admin-login__logo" onClick={() => navigate('/')}>
-          <div className="admin-login__octahedron">⬡</div>
-          <span className="admin-login__brand">Octal Philippines</span>
+          <img src={octalLogo} alt="Octal Philippines Inc." className="admin-login__logo-img" />
         </button>
         <h1 className="admin-login__title">Admin Access</h1>
         <p className="admin-login__subtitle">Enter your admin password to continue</p>

@@ -180,7 +180,7 @@ export default function ApplyModal({ job, onClose }) {
                   {loading ? 'Submitting…' : 'Submit Application'}
                 </button>
               </div>
-              {error && <p style={{ color: '#e53e3e', fontSize: '13px', marginTop: '8px', textAlign: 'center' }}>{error}</p>}
+              {error && <p style={{ color: '#e53e3e', fontSize: '0.85rem', marginTop: '8px', textAlign: 'center' }}>{error}</p>}
             </form>
           </>
         )}

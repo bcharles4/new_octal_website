@@ -71,7 +71,6 @@ export default function Contact() {
   return (
     <section id="connect" ref={sectionRef} className="contact section section--light-alt">
       <div className="contact__header">
-        <span className="about__label">Get In Touch</span>
         <h2 className="section-title">Let's Connect</h2>
         <p className="section-subtitle" style={{ margin: '1rem auto 0', textAlign: 'center' }}>
           Thank you for visiting Octal Philippines Inc. We value your interest and look forward to collaborating with you to create solutions that empower success.

@@ -61,7 +61,6 @@ export default function About() {
       <div className="about__grid">
         <div className="about__text-col">
           <div ref={headingRef}>
-            <span className="about__label">Who We Are</span>
             <h2 className="section-title">Building Futures<br />Together</h2>
           </div>
           <div ref={textRef}>

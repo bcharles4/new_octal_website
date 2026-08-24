@@ -1,46 +1,70 @@
 .admin-login {
+  position: relative;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   background: linear-gradient(135deg, #060a08 0%, #0c2010 100%);
   padding: 2rem;
+  overflow: hidden;
+}
+
+/* GridScan renders on a transparent canvas, so the gradient above shows through
+   and the grid reads as depth rather than a flat backdrop. */
+.admin-login__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Vignette that darkens the middle just enough to keep the card legible over a
+   moving grid. pointer-events stays off so GridScan still tracks the cursor. */
+.admin-login__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 55% at 50% 50%, rgba(4, 8, 5, 0.82) 0%, rgba(4, 8, 5, 0.35) 55%, transparent 100%),
+    linear-gradient(to bottom, rgba(4, 8, 5, 0.5) 0%, transparent 25%, transparent 75%, rgba(4, 8, 5, 0.5) 100%);
 }
 
 .admin-login__card {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(89, 161, 74, 0.25);
+  position: relative;
+  z-index: 2;
+  background: rgba(10, 16, 12, 0.55);
+  border: 1px solid rgba(89, 161, 74, 0.28);
   border-radius: 16px;
-  padding: 3rem 2.5rem;
+  padding: 2.75rem 2.5rem;
   width: 100%;
   max-width: 420px;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
 }
 
 .admin-login__logo {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 2rem;
+  display: block;
+  margin: 0 auto 2rem;
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
-  text-align: left;
+  line-height: 0;
 }
 
-.admin-login__octahedron {
-  font-size: 2rem;
-  color: #59a14a;
-  line-height: 1;
+.admin-login__logo-img {
+  height: 64px;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+  transition: opacity 0.2s;
 }
 
-.admin-login__brand {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 0.02em;
+.admin-login__logo:hover .admin-login__logo-img {
+  opacity: 0.85;
 }
 
 .admin-login__title {
@@ -48,12 +72,14 @@
   font-weight: 800;
   color: #ffffff;
   margin: 0 0 0.5rem;
+  text-align: center;
 }
 
 .admin-login__subtitle {
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.5);
   margin: 0 0 2rem;
+  text-align: center;
 }
 
 .admin-login__form {
@@ -142,6 +168,10 @@
 
   .admin-login__card {
     padding: 2rem 1.5rem;
+  }
+
+  .admin-login__logo-img {
+    height: 52px;
   }
 
   .admin-login__title {

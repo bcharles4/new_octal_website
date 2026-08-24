@@ -37,6 +37,31 @@ html {
   scroll-behavior: smooth;
   scrollbar-width: thin;
   scrollbar-color: var(--primary) var(--bg-darker);
+  /* Baseline root size. Every font-size in this app is rem-based, so the
+     root is the single knob that scales all typography. */
+  font-size: 100%;
+  /* Stop iOS/Android from inflating text on orientation change - we control
+     the scaling ourselves below. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* ============================
+   Fluid typography (mobile)
+   ============================
+   Below the tablet breakpoint the root font-size follows the viewport, so
+   type reflows smoothly between a 320px phone and a 768px tablet instead of
+   snapping at breakpoints.
+
+     320px -> ~14.0px    375px -> ~16.0px
+     390px -> ~16.5px    430px+ -> 17px (capped)
+
+   Everything sized in rem (headings, body copy, buttons, spacing) inherits
+   this automatically. */
+@media (max-width: 768px) {
+  html {
+    font-size: clamp(14px, 3.6vw + 2.5px, 17px);
+  }
 }
 
 body {
@@ -304,5 +329,24 @@ a:hover {
 
   .glass-card {
     padding: 1.5rem;
+  }
+
+  /* iOS Safari zooms the whole page when a focused form control computes to
+     under 16px. Hold every control at 16px or above on touch layouts so
+     tapping a field never yanks the viewport - it still scales up with the
+     root, it just can't fall through the floor.
+
+     !important is deliberate: this has to outrank per-component rules like
+     `.form-group input` no matter which stylesheet declared them. */
+  input,
+  textarea,
+  select {
+    font-size: max(1rem, 16px) !important;
+  }
+
+  /* Checkboxes/radios have no text, and the rule above would inflate them. */
+  input[type='checkbox'],
+  input[type='radio'] {
+    font-size: inherit !important;
   }
 }

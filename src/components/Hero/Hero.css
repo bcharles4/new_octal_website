@@ -461,7 +461,7 @@
   }
 
   .hero__title {
-    font-size: 20pc;
+    font-size: clamp(1.9rem, 9vw, 2.6rem);
     margin-bottom: 0.9rem;
     text-transform: none;
     letter-spacing: -0.03em;
@@ -489,8 +489,8 @@
   }
 
   .hero__title {
-    font-size:3pc;
-    text-transform: uppercase;  
+    font-size: clamp(1.6rem, 9.5vw, 2.1rem);
+    text-transform: uppercase;
   }
 
 }

@@ -75,7 +75,6 @@ export default function CoreValues() {
   return (
     <section id="core-values" ref={sectionRef} className="values section section--light">
       <div ref={headerRef} className="values__header">
-        <span className="values__label">What Drives Us</span>
         <h2 className="section-title">Our Core Values</h2>
         <p className="section-subtitle">
           The principles that guide how we work with every client and partner.

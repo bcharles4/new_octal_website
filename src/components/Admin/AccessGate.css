@@ -1,0 +1,51 @@
+.access-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  cursor: pointer;
+  background:
+    radial-gradient(70% 60% at 50% 45%, rgba(89, 161, 74, 0.1) 0%, transparent 70%),
+    rgba(4, 8, 6, 0.86);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: access-gate-in 0.45s ease both;
+}
+
+.access-gate:focus-visible {
+  outline: none;
+}
+
+.access-gate__card {
+  animation: access-gate-card-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes access-gate-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes access-gate-card-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .access-gate,
+  .access-gate__card {
+    animation: none;
+  }
+}

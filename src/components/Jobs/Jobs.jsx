@@ -56,7 +56,6 @@ export default function Jobs() {
   return (
     <section id="jobs" ref={sectionRef} className="jobs section section--light-alt">
       <div className="jobs__header">
-        <span className="about__label">Careers</span>
         <h2 className="section-title">Find a Job</h2>
         <p className="section-subtitle" style={{ margin: '1rem auto 0', textAlign: 'center' }}>
           Join a team that's building the future of technology in the Philippines.
