@@ -414,8 +414,11 @@ const PixelBlast = ({
         const h = container.clientHeight || 1;
         renderer.setSize(w, h, false);
         uniforms.uResolution.value.set(renderer.domElement.width, renderer.domElement.height);
-        if (threeRef.current?.composer)
-          threeRef.current.composer.setSize(renderer.domElement.width, renderer.domElement.height);
+        /* setSize takes CSS pixels and multiplies by the pixel ratio itself, so
+           handing it the drawing-buffer size squares the ratio: at dpr 2 the
+           canvas came out 4x the pixels and, since updateStyle defaults to on,
+           twice the container's width in CSS too. Phones paid for both. */
+        if (threeRef.current?.composer) threeRef.current.composer.setSize(w, h, false);
         uniforms.uPixelSize.value = pixelSize * renderer.getPixelRatio();
       };
       setSize();
@@ -471,7 +474,7 @@ const PixelBlast = ({
         if (composer && composer.passes.length > 0) composer.passes.forEach(p => (p.renderToScreen = false));
         composer.addPass(noisePass);
       }
-      if (composer) composer.setSize(renderer.domElement.width, renderer.domElement.height);
+      if (composer) composer.setSize(container.clientWidth || 1, container.clientHeight || 1, false);
       const mapToPixels = e => {
         const rect = renderer.domElement.getBoundingClientRect();
         const scaleX = renderer.domElement.width / rect.width;
