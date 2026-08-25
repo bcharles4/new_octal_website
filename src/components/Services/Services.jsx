@@ -122,7 +122,6 @@ export default function Services() {
   return (
     <section id="solutions" ref={sectionRef} className="services section section--light">
       <div className="services__header">
-        <span className="about__label">What We Do</span>
         <p className="section-subtitle">
           Innovative, reliable, and scalable technology solutions designed to
           meet diverse organizational needs — from staffing and infrastructure
@@ -202,7 +201,6 @@ export default function Services() {
             </button>
 
             <header className="services-modal__banner">
-              <span className="services-modal__eyebrow">Our Solutions</span>
               <h3 className="services-modal__title">{selectedService.title}</h3>
               <span className="services-modal__divider" aria-hidden="true" />
               <p className="services-modal__intro">{selectedService.details.intro}</p>
