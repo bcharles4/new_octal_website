@@ -270,6 +270,9 @@
 
 .services-modal__banner {
   position: relative;
+  /* Never let the flex parent squeeze the banner: it clips its own text when
+     shrunk, which cut the intro off mid-sentence on short screens. */
+  flex: 0 0 auto;
   padding: clamp(2rem, 4vw, 2.75rem) clamp(1.75rem, 4vw, 2.75rem) 1.75rem;
   background:
     radial-gradient(circle at 90% -20%, rgba(89, 161, 74, 0.35), transparent 55%),
@@ -310,6 +313,9 @@
   line-height: 1.2;
   letter-spacing: -0.015em;
   margin: 0;
+  /* Keeps long titles clear of the close button that floats over this corner. */
+  padding-right: clamp(2.75rem, 6vw, 3.25rem);
+  overflow-wrap: anywhere;
 }
 
 .services-modal__divider {
@@ -333,6 +339,11 @@
   padding: 1.75rem clamp(1.75rem, 4vw, 2.75rem) clamp(2rem, 4vw, 2.5rem);
   display: grid;
   gap: 1rem;
+  /* Takes whatever height the banner leaves and scrolls inside it. min-height:0
+     is required — flex items default to min-height:auto, which refuses to
+     shrink below content size and would break the scroll. */
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: var(--primary) transparent;
@@ -418,6 +429,22 @@
 
   .services-modal__item h4 {
     margin-right: 0;
+  }
+}
+
+/* Landscape phones and other very short viewports: the banner on its own can
+   be taller than the whole modal, so scroll banner and content together as one
+   document rather than clipping the banner. */
+@media (max-height: 520px) {
+  .services-modal {
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .services-modal__content {
+    flex: 0 0 auto;
+    overflow: visible;
   }
 }
 
