@@ -18,6 +18,7 @@ RUN npm ci --omit=dev
 # Everything server.js touches at runtime.
 COPY server.js ./server.js
 COPY db ./db
+COPY lib ./lib
 COPY data ./data
 COPY src/assets/img/octal-logo-withText.png ./src/assets/img/octal-logo-withText.png
 

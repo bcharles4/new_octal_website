@@ -1,12 +1,12 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import nodemailer from 'nodemailer';
 import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { existsSync } from 'fs';
 import jwt from 'jsonwebtoken';
+import { sendMail, verifyMailer } from './lib/mailer.js';
 import { connectDb } from './db/connect.js';
 import { Job } from './db/models/Job.js';
 import { AdminUser, hashPassword } from './db/models/AdminUser.js';
@@ -94,36 +94,16 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 },
 });
 
-// SMTP transporter
-const SMTP_PORT = Number(process.env.SMTP_PORT || 465);
+/* Verified once at boot and only logged, so a mail misconfiguration shows up
+   in the deploy log rather than the first time a visitor submits a form. */
+verifyMailer()
+  .then((msg) => console.log(msg))
+  .catch((err) => console.error(`Mail NOT configured: ${err.message}`));
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: SMTP_PORT,
-  /* 465 uses implicit TLS; 587 negotiates it with STARTTLS. */
-  secure: SMTP_PORT === 465,
-  requireTLS: SMTP_PORT !== 465,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-  /* Container platforms such as Railway have no IPv6 route, but Gmail's DNS
-     answers with an AAAA record first — the connection then dies with
-     ENETUNREACH before IPv4 is ever attempted. Pinning to IPv4 avoids it. */
-  family: 4,
-  /* Without these a blocked SMTP port hangs the request for minutes instead of
-     failing fast with a usable error. */
-  connectionTimeout: 15000,
-  greetingTimeout: 10000,
-  socketTimeout: 30000,
-});
-
-/* Checked once at boot and only logged — a mail problem should surface in the
-   deploy logs, not first appear when a visitor submits the contact form. */
-transporter
-  .verify()
-  .then(() => console.log(`SMTP ready (${process.env.SMTP_HOST}:${SMTP_PORT}).`))
-  .catch((err) => console.error(`SMTP NOT reachable (${process.env.SMTP_HOST}:${SMTP_PORT}):`, err.message));
+/* SendGrid will only accept a From address that has been verified in the
+   SendGrid dashboard, which need not be the SMTP login. Falls back to the SMTP
+   user so local development is unchanged. */
+const MAIL_FROM = process.env.MAIL_FROM || process.env.SMTP_USER;
 
 // Logo used as inline attachment (CID)
 const LOGO_PATH = path.join(__dirname, 'src', 'assets', 'img', 'octal-logo-withText.png');
@@ -602,8 +582,8 @@ app.post('/api/contact', async (req, res) => {
   }
 
   try {
-    await transporter.sendMail({
-      from: `"No Reply | Octal Philippines" <${process.env.SMTP_USER}>`,
+    await sendMail({
+      from: `"No Reply | Octal Philippines" <${MAIL_FROM}>`,
       to: process.env.ADMIN_EMAIL,
       cc: process.env.CC_EMAIL,
       replyTo: `"${firstName} ${lastName}" <${email}>`,
@@ -670,8 +650,8 @@ app.post('/api/apply', upload.single('resume'), async (req, res) => {
 
   try {
     // Admin notification
-    await transporter.sendMail({
-      from: `"No Reply | Octal Philippines" <${process.env.SMTP_USER}>`,
+    await sendMail({
+      from: `"No Reply | Octal Philippines" <${MAIL_FROM}>`,
       to: process.env.ADMIN_EMAIL,
       cc: process.env.CC_EMAIL,
       replyTo: `"${firstName} ${lastName}" <${email}>`,
@@ -691,8 +671,8 @@ app.post('/api/apply', upload.single('resume'), async (req, res) => {
     });
 
     // Applicant confirmation
-    await transporter.sendMail({
-      from: `"Octal Philippines Inc." <${process.env.SMTP_USER}>`,
+    await sendMail({
+      from: `"Octal Philippines Inc." <${MAIL_FROM}>`,
       to: email,
       subject: `We received your application — ${jobTitle}`,
       html: buildApplicantConfirmationHtml({
