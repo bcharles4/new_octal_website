@@ -95,15 +95,35 @@ const upload = multer({
 });
 
 // SMTP transporter
+const SMTP_PORT = Number(process.env.SMTP_PORT || 465);
+
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT || 465),
-  secure: true, // SSL on port 465
+  port: SMTP_PORT,
+  /* 465 uses implicit TLS; 587 negotiates it with STARTTLS. */
+  secure: SMTP_PORT === 465,
+  requireTLS: SMTP_PORT !== 465,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
   },
+  /* Container platforms such as Railway have no IPv6 route, but Gmail's DNS
+     answers with an AAAA record first — the connection then dies with
+     ENETUNREACH before IPv4 is ever attempted. Pinning to IPv4 avoids it. */
+  family: 4,
+  /* Without these a blocked SMTP port hangs the request for minutes instead of
+     failing fast with a usable error. */
+  connectionTimeout: 15000,
+  greetingTimeout: 10000,
+  socketTimeout: 30000,
 });
+
+/* Checked once at boot and only logged — a mail problem should surface in the
+   deploy logs, not first appear when a visitor submits the contact form. */
+transporter
+  .verify()
+  .then(() => console.log(`SMTP ready (${process.env.SMTP_HOST}:${SMTP_PORT}).`))
+  .catch((err) => console.error(`SMTP NOT reachable (${process.env.SMTP_HOST}:${SMTP_PORT}):`, err.message));
 
 // Logo used as inline attachment (CID)
 const LOGO_PATH = path.join(__dirname, 'src', 'assets', 'img', 'octal-logo-withText.png');
