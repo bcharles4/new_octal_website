@@ -1,0 +1,24 @@
+# syntax=docker/dockerfile:1
+#
+# API-only image, used by Railway. The frontend is built locally and uploaded
+# to cPanel, so there is deliberately no Vite build and no dist/ here — the
+# server detects the missing build and runs in API-only mode.
+
+FROM node:22-alpine
+WORKDIR /app
+
+ENV NODE_ENV=production
+# Bind all interfaces. PORT is injected by the platform at runtime; never
+# hardcode it, and never bind a specific IP — it will not exist in the container.
+ENV HOST=0.0.0.0
+
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+
+# Everything server.js touches at runtime.
+COPY server.js ./server.js
+COPY db ./db
+COPY data ./data
+COPY src/assets/img/octal-logo-withText.png ./src/assets/img/octal-logo-withText.png
+
+CMD ["node", "server.js"]
