@@ -20,6 +20,7 @@ import PixelBlast from '../PixelBlast/PixelBlast';
 import AccessGate from './AccessGate';
 import './AdminDashboard.css';
 import octalLogo from '../../assets/img/octal-logo-withText.png';
+import { apiUrl } from '../../lib/api';
 
 const EMPTY_JOB = {
   title: '',
@@ -75,7 +76,7 @@ export default function AdminDashboard() {
     setLoading(true);
     setLoadError('');
     try {
-      const res = await fetch('/api/admin/jobs', { headers: authHeaders() });
+      const res = await fetch(apiUrl('/api/admin/jobs'), { headers: authHeaders() });
       if (res.status === 401) {
         logout();
         return;
@@ -132,7 +133,7 @@ export default function AdminDashboard() {
     };
     try {
       const isEdit = modal !== 'create';
-      const url = isEdit ? `/api/admin/jobs/${modal.id}` : '/api/admin/jobs';
+      const url = isEdit ? apiUrl(`/api/admin/jobs/${modal.id}`) : apiUrl('/api/admin/jobs');
       const method = isEdit ? 'PUT' : 'POST';
       const res = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(payload) });
       const data = await res.json();
@@ -150,7 +151,7 @@ export default function AdminDashboard() {
     setDeleteError('');
     setDeleting(true);
     try {
-      const res = await fetch(`/api/admin/jobs/${id}`, { method: 'DELETE', headers: authHeaders() });
+      const res = await fetch(apiUrl(`/api/admin/jobs/${id}`), { method: 'DELETE', headers: authHeaders() });
       if (!res.ok) throw new Error('Delete failed.');
       setDeleteConfirm(null);
       fetchJobs();

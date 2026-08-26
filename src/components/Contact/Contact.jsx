@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { apiUrl } from '../../lib/api';
 import './Contact.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -52,7 +53,7 @@ export default function Contact() {
     setSending(true);
     setError('');
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch(apiUrl('/api/contact'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

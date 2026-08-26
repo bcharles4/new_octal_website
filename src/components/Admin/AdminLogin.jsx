@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import GridScan from '../GridScan/GridScan';
 import octalLogo from '../../assets/img/octal-logo-withText.png';
+import { apiUrl } from '../../lib/api';
 import './AdminLogin.css';
 
 export default function AdminLogin() {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -15,10 +17,10 @@ export default function AdminLogin() {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch('/api/admin/login', {
+      const res = await fetch(apiUrl('/api/admin/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Login failed.');
@@ -59,9 +61,24 @@ export default function AdminLogin() {
           <img src={octalLogo} alt="Octal Philippines Inc." className="admin-login__logo-img" />
         </button>
         <h1 className="admin-login__title">Admin Access</h1>
-        <p className="admin-login__subtitle">Enter your admin password to continue</p>
+        <p className="admin-login__subtitle">Sign in with your admin account to continue</p>
 
         <form className="admin-login__form" onSubmit={handleSubmit}>
+          <div className="admin-login__field">
+            <label htmlFor="email" className="admin-login__label">Email</label>
+            <input
+              id="email"
+              type="email"
+              className="admin-login__input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@octaltech.net"
+              autoComplete="username"
+              required
+              autoFocus
+            />
+          </div>
+
           <div className="admin-login__field">
             <label htmlFor="password" className="admin-login__label">Password</label>
             <input
@@ -70,9 +87,9 @@ export default function AdminLogin() {
               className="admin-login__input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter admin password"
+              placeholder="Enter your password"
+              autoComplete="current-password"
               required
-              autoFocus
             />
           </div>
 

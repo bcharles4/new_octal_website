@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
+import { apiUrl } from '../../lib/api';
 import './ApplyModal.css';
 
 export default function ApplyModal({ job, onClose }) {
@@ -69,7 +70,7 @@ export default function ApplyModal({ job, onClose }) {
     if (form.resume) data.append('resume', form.resume);
 
     try {
-      const res = await fetch('/api/apply', { method: 'POST', body: data });
+      const res = await fetch(apiUrl('/api/apply'), { method: 'POST', body: data });
       if (!res.ok) throw new Error('Server error');
       setSubmitted(true);
     } catch {

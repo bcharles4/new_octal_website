@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ApplyModal from './ApplyModal';
 import JobDetailModal from './JobDetailModal';
+import { apiUrl } from '../../lib/api';
 import './Jobs.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -16,7 +17,7 @@ export default function Jobs() {
   const jobsPerPage = 5;
 
   useEffect(() => {
-    fetch('/api/jobs')
+    fetch(apiUrl('/api/jobs'))
       .then((r) => r.json())
       .then((data) => setJobs(Array.isArray(data) ? data : []))
       .catch(() => setJobs([]));
