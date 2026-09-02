@@ -58,12 +58,18 @@ export default function Contact() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      if (!res.ok) throw new Error('Failed to send');
+      if (!res.ok) {
+        /* The API answers with a curated { error } string. Showing it beats a
+           blanket message — swallowing it is why a mail outage looked like a
+           generic client-side failure for so long. */
+        const detail = await res.json().catch(() => null);
+        throw new Error(detail?.error || `Request failed (${res.status}).`);
+      }
       setSubmitted(true);
       setFormData({ firstName: '', lastName: '', email: '', phone: '', message: '', consent: false });
       setTimeout(() => setSubmitted(false), 4000);
-    } catch {
-      setError('Something went wrong. Please try again or email us directly.');
+    } catch (err) {
+      setError(`${err.message || 'Something went wrong.'} Please try again or email us directly.`);
     } finally {
       setSending(false);
     }

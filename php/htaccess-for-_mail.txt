@@ -1,0 +1,23 @@
+# Upload this file to public_html/_mail/ and RENAME it to ".htaccess"
+# (leading dot). cPanel's File Manager hides dotfiles by default — turn on
+# "Show Hidden Files (dotfiles)" in its settings to see it afterwards.
+
+# No directory listing: without this, a request for /_mail/ would enumerate
+# mail-relay.php and the whole PHPMailer folder.
+Options -Indexes
+
+# Only mail-relay.php is meant to be reachable. The PHPMailer library files are
+# plain PHP that should never be requested directly.
+<FilesMatch "\.(php)$">
+    Require all denied
+</FilesMatch>
+
+<Files "mail-relay.php">
+    Require all granted
+</Files>
+
+# The relay authenticates with a header, so nothing here should ever be cached
+# by an intermediary.
+<IfModule mod_headers.c>
+    Header always set Cache-Control "no-store"
+</IfModule>

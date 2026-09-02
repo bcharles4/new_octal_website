@@ -100,10 +100,18 @@ verifyMailer()
   .then((msg) => console.log(msg))
   .catch((err) => console.error(`Mail NOT configured: ${err.message}`));
 
-/* SendGrid will only accept a From address that has been verified in the
-   SendGrid dashboard, which need not be the SMTP login. Falls back to the SMTP
-   user so local development is unchanged. */
+/* Both HTTP backends only accept a From address they have been told they own —
+   a sender verified in SendGrid, or one listed in the relay's `allowed_from` —
+   and neither need be the SMTP login. Falls back to the SMTP user so local
+   development is unchanged.
+
+   Announced at boot because there is no third fallback: unset, this would
+   quietly put "<undefined>" in every From header and the backend would reject
+   the message with an error that says nothing about the cause. */
 const MAIL_FROM = process.env.MAIL_FROM || process.env.SMTP_USER;
+if (!MAIL_FROM) {
+  console.error('Mail NOT configured: neither MAIL_FROM nor SMTP_USER is set — every send will fail.');
+}
 
 // Logo used as inline attachment (CID)
 const LOGO_PATH = path.join(__dirname, 'src', 'assets', 'img', 'octal-logo-withText.png');
@@ -724,6 +732,25 @@ if (hasFrontend) {
     });
   });
 }
+
+/* Multer rejects an oversized resume by passing a MulterError down the stack.
+   Without this it reaches Express's default handler and comes back as an HTML
+   error page, so the frontend's `res.json()` throws and the applicant is told
+   "something went wrong" instead of that their file is too big. Registered last
+   because Express only reaches error middleware declared after the routes. */
+app.use((err, _req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return res.status(413).json({ error: 'Resume is too large. The limit is 10MB.' });
+    }
+    return res.status(400).json({ error: `Upload rejected: ${err.message}` });
+  }
+  if (err) {
+    console.error('Unhandled error:', err);
+    return res.status(500).json({ error: 'Something went wrong.' });
+  }
+  return next();
+});
 
 /* Connect before listening so the process fails loudly on a bad MONGODB_URI
    rather than serving 500s to the first visitor who loads the careers page. */

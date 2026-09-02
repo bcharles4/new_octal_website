@@ -71,10 +71,16 @@ export default function ApplyModal({ job, onClose }) {
 
     try {
       const res = await fetch(apiUrl('/api/apply'), { method: 'POST', body: data });
-      if (!res.ok) throw new Error('Server error');
+      if (!res.ok) {
+        /* The API answers with a curated { error } string — including the 413
+           for an oversized resume, which is the one failure the applicant can
+           actually do something about. */
+        const detail = await res.json().catch(() => null);
+        throw new Error(detail?.error || `Request failed (${res.status}).`);
+      }
       setSubmitted(true);
-    } catch {
-      setError('Failed to submit your application. Please try again.');
+    } catch (err) {
+      setError(`${err.message || 'Failed to submit your application.'} Please try again.`);
     } finally {
       setLoading(false);
     }

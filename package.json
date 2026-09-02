@@ -10,7 +10,8 @@
     "server": "node server.js",
     "lint": "eslint .",
     "preview": "vite preview",
-    "db:seed": "node db/seed.js"
+    "db:seed": "node db/seed.js",
+    "admin:password": "node db/set-password.js"
   },
   "dependencies": {
     "@babylonjs/core": "^8.51.2",
