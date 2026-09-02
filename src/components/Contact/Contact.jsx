@@ -93,7 +93,7 @@ export default function Contact() {
               <p>We'll get back to you within 24 hours.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="contact__form" autoComplete="off">
+            <form onSubmit={handleSubmit} className="contact__form" autoComplete="on">
               <input
                 type="text"
                 name="company"
