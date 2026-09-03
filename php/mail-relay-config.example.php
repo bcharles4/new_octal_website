@@ -30,7 +30,7 @@ return [
     'smtp_port' => 465,
 
     /** A real cPanel mailbox and its password. */
-    'smtp_user' => 'info@octaltech.net',
+    'smtp_user' => 'noreply@octaltech.net',
     'smtp_pass' => 'REPLACE_WITH_THE_MAILBOX_PASSWORD',
 
     /**
@@ -40,6 +40,6 @@ return [
      * set to on Railway.
      */
     'allowed_from' => [
-        'info@octaltech.net',
+        'noreply@octaltech.net',
     ],
 ];

@@ -8,7 +8,10 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Contact() {
   const sectionRef = useRef(null);
-  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', phone: '', message: '', consent: false });
+  /* `company` is the honeypot. It has to live in state like every other field,
+     because the payload is JSON.stringify(formData) — an unbound input would
+     never be sent and the server would have nothing to check. */
+  const [formData, setFormData] = useState({ firstName: '', lastName: '', email: '', phone: '', message: '', consent: false, company: '' });
   const [submitted, setSubmitted] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
@@ -66,7 +69,7 @@ export default function Contact() {
         throw new Error(detail?.error || `Request failed (${res.status}).`);
       }
       setSubmitted(true);
-      setFormData({ firstName: '', lastName: '', email: '', phone: '', message: '', consent: false });
+      setFormData({ firstName: '', lastName: '', email: '', phone: '', message: '', consent: false, company: '' });
       setTimeout(() => setSubmitted(false), 4000);
     } catch (err) {
       setError(`${err.message || 'Something went wrong.'} Please try again or email us directly.`);
@@ -94,9 +97,13 @@ export default function Contact() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="contact__form" autoComplete="on">
+              {/* Honeypot: off-screen and hidden from assistive tech, so only
+                  an automated client ever fills it in. */}
               <input
                 type="text"
                 name="company"
+                value={formData.company}
+                onChange={handleChange}
                 aria-hidden="true"
                 tabIndex={-1}
                 autoComplete="off"

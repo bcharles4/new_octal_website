@@ -6,6 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { existsSync } from 'fs';
 import jwt from 'jsonwebtoken';
+import rateLimit from 'express-rate-limit';
 import { sendMail, verifyMailer } from './lib/mailer.js';
 import { connectDb } from './db/connect.js';
 import { Job } from './db/models/Job.js';
@@ -51,6 +52,19 @@ function requireAdminRole(req, res, next) {
 }
 
 const app = express();
+
+/* Railway terminates TLS at its edge and forwards on, so the socket address
+   this process sees is the proxy's, not the visitor's. Without this every
+   visitor would share a single rate-limit bucket and the first spammer would
+   lock out the whole internet.
+
+   Exactly one hop is trusted, which makes req.ip the address Railway's edge
+   observed. That matters: any X-Forwarded-For a client sets itself is appended
+   to the LEFT of Railway's value, so it is ignored rather than being able to
+   forge an identity and slip the limiter. Never widen this to `true` — that
+   would trust the client's own header. */
+app.set('trust proxy', 1);
+
 /* The frontend is served from cPanel while this API runs on a separate host, so
    requests are cross-origin. Only the domains listed in ALLOWED_ORIGINS may call
    it; an unset list means same-origin only (local development uses the Vite
@@ -94,6 +108,99 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 },
 });
 
+/* ------------------------------------------------- Abuse controls ------- */
+
+/* Node reports IPv4 clients on a dual-stack socket as ::ffff:1.2.3.4, which
+   would otherwise show up in the notification emails and make an address
+   awkward to paste into a block list. */
+function clientIp(req) {
+  const ip = req.ip || req.socket?.remoteAddress || 'unknown';
+  return ip.startsWith('::ffff:') ? ip.slice(7) : ip;
+}
+
+/* Both forms carry a `company` field that is positioned off-screen and hidden
+   from assistive technology, so a human never fills it in. Anything that does
+   is automated.
+
+   The caller answers a hit with the same success shape a real submission gets:
+   telling a bot it was detected only invites it to adapt, and a silent success
+   costs it nothing to keep believing. */
+function isHoneypotHit(req) {
+  const value = req.body?.company;
+  return typeof value === 'string' && value.trim() !== '';
+}
+
+/* In-memory counters. They reset on redeploy and are per-instance, which is
+   fine for a single Railway service — persisting them in Mongo would buy very
+   little for a contact form and add a database round trip to every submission.
+   Revisit if this ever runs more than one replica. */
+function formLimiter({ windowMs, limit, label, message }) {
+  return rateLimit({
+    windowMs,
+    limit,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+    /* Default is req.ip, but being explicit documents that the whole scheme
+       depends on the `trust proxy` setting above being right. */
+    keyGenerator: (req) => clientIp(req),
+    handler: (req, res, _next, options) => {
+      /* Logged so a burst is visible in the Railway log while it is happening,
+         with the address needed to block it upstream. */
+      console.warn(`Rate limit: ${label} from ${clientIp(req)}`);
+      res.status(options.statusCode).json({ error: message });
+    },
+  });
+}
+
+/* A visitor sends one enquiry. Five in a quarter of an hour leaves room for a
+   genuine retry after a network failure without being useful to a spammer. */
+const contactLimiter = formLimiter({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  label: '/api/contact',
+  message: 'Too many messages sent from this network. Please try again in a few minutes.',
+});
+
+/* Applications are rarer and each carries an upload, so the window is longer.
+   Five per hour still covers someone applying to several roles in one sitting. */
+const applyLimiter = formLimiter({
+  windowMs: 60 * 60 * 1000,
+  limit: 5,
+  label: '/api/apply',
+  message: 'Too many applications submitted from this network. Please try again later.',
+});
+
+/* The notification templates interpolate submitted text straight into HTML.
+   Without escaping, anyone can post markup through the public form and have it
+   render inside the admin's inbox — a working phishing link in an email that
+   genuinely came from your own domain. */
+function escapeHtml(value) {
+  if (value === null || value === undefined) return '';
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/* Shown at the foot of the admin notifications so a submission can be traced
+   and, if it turns out to be abuse, blocked at the edge. */
+function buildMetaRowsHtml(req) {
+  const ip = escapeHtml(clientIp(req));
+  const agent = escapeHtml(req.get('user-agent') || 'unknown');
+  const when = new Date().toISOString();
+
+  return `<tr style="border-top:1px solid #e5e7eb;">
+                <td style="padding:14px 20px;color:#6b7280;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;vertical-align:top;">Sender IP</td>
+                <td style="padding:14px 20px;color:#111827;font-size:15px;font-family:monospace;">${ip}</td>
+              </tr>
+              <tr>
+                <td style="padding:14px 20px;color:#6b7280;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;vertical-align:top;">Submitted</td>
+                <td style="padding:14px 20px;color:#6b7280;font-size:12px;line-height:1.5;">${when}<br><span style="color:#9ca3af;">${agent}</span></td>
+              </tr>`;
+}
+
 /* Verified once at boot and only logged, so a mail misconfiguration shows up
    in the deploy log rather than the first time a visitor submits a form. */
 verifyMailer()
@@ -116,8 +223,15 @@ if (!MAIL_FROM) {
 // Logo used as inline attachment (CID)
 const LOGO_PATH = path.join(__dirname, 'src', 'assets', 'img', 'octal-logo-withText.png');
 
-function buildEmailHtml({ firstName, lastName, email, phone, message }) {
+function buildEmailHtml({ firstName, lastName, email, phone, message, metaRows = '' }) {
   const year = new Date().getFullYear();
+  /* Everything below this line came from a public form, so none of it may reach
+     the template unescaped. See escapeHtml. */
+  firstName = escapeHtml(firstName);
+  lastName = escapeHtml(lastName);
+  email = escapeHtml(email);
+  phone = escapeHtml(phone);
+  message = escapeHtml(message);
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -161,6 +275,7 @@ function buildEmailHtml({ firstName, lastName, email, phone, message }) {
                 <td style="padding:14px 20px;color:#6b7280;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;vertical-align:top;">Message</td>
                 <td style="padding:14px 20px;color:#111827;font-size:15px;line-height:1.6;white-space:pre-wrap;">${message}</td>
               </tr>
+              ${metaRows}
             </table>
 
           </td>
@@ -194,8 +309,21 @@ function buildCareerEmailHtml({
   jobTitle,
   jobLocation,
   jobType,
+  metaRows = '',
 }) {
   const year = new Date().getFullYear();
+  /* Same rule as buildEmailHtml: nothing from the form reaches the template
+     unescaped. `linkedin` lands in an href as well as in text, and the route
+     only prefix-validates it, so it is escaped here too. */
+  firstName = escapeHtml(firstName);
+  lastName = escapeHtml(lastName);
+  email = escapeHtml(email);
+  phone = escapeHtml(phone);
+  linkedin = escapeHtml(linkedin);
+  coverLetter = escapeHtml(coverLetter);
+  jobTitle = escapeHtml(jobTitle);
+  jobLocation = escapeHtml(jobLocation);
+  jobType = escapeHtml(jobType);
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -262,6 +390,7 @@ function buildCareerEmailHtml({
               </tr>`
                   : ''
               }
+              ${metaRows}
             </table>
 
           </td>
@@ -293,6 +422,15 @@ function buildApplicantConfirmationHtml({
   jobType,
 }) {
   const year = new Date().getFullYear();
+  /* This one is the most exposed of the three: it is delivered to whatever
+     address the submitter typed, carrying fields they also control. Unescaped,
+     that is a way to send arbitrary HTML from this domain to any inbox. The
+     rate limiter caps the volume; escaping removes the payload. */
+  firstName = escapeHtml(firstName);
+  lastName = escapeHtml(lastName);
+  jobTitle = escapeHtml(jobTitle);
+  jobLocation = escapeHtml(jobLocation);
+  jobType = escapeHtml(jobType);
   return `<!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
@@ -582,8 +720,14 @@ app.delete('/api/admin/accounts/:id', authMiddleware, requireAdminRole, async (r
   }
 });
 // CONTACT endpoint
-app.post('/api/contact', async (req, res) => {
+app.post('/api/contact', contactLimiter, async (req, res) => {
   const { firstName, lastName, email, phone, message } = req.body;
+
+  /* Answered as a success on purpose — see isHoneypotHit. */
+  if (isHoneypotHit(req)) {
+    console.warn(`Honeypot: /api/contact from ${clientIp(req)}`);
+    return res.json({ success: true });
+  }
 
   if (!firstName || !lastName || !email || !message) {
     return res.status(400).json({ error: 'Missing required fields.' });
@@ -596,7 +740,14 @@ app.post('/api/contact', async (req, res) => {
       cc: process.env.CC_EMAIL,
       replyTo: `"${firstName} ${lastName}" <${email}>`,
       subject: `New Inquiry — ${firstName} ${lastName}`,
-      html: buildEmailHtml({ firstName, lastName, email, phone, message }),
+      html: buildEmailHtml({
+        firstName,
+        lastName,
+        email,
+        phone,
+        message,
+        metaRows: buildMetaRowsHtml(req),
+      }),
       attachments: [
         {
           filename: 'octal-logo-withText.png',
@@ -615,7 +766,10 @@ app.post('/api/contact', async (req, res) => {
 
 // CAREER endpoint (multipart/form-data, optional resume file)
 // Frontend must send field name: resume
-app.post('/api/apply', upload.single('resume'), async (req, res) => {
+/* applyLimiter runs BEFORE multer so a refused request is rejected on its
+   headers — otherwise every blocked attempt would still have its 10MB upload
+   read into this process's memory first. */
+app.post('/api/apply', applyLimiter, upload.single('resume'), async (req, res) => {
   const {
     firstName,
     lastName,
@@ -627,6 +781,12 @@ app.post('/api/apply', upload.single('resume'), async (req, res) => {
     jobLocation,
     jobType,
   } = req.body;
+
+  /* After multer, which is what populates req.body for multipart requests. */
+  if (isHoneypotHit(req)) {
+    console.warn(`Honeypot: /api/apply from ${clientIp(req)}`);
+    return res.json({ success: true });
+  }
 
   if (!firstName || !lastName || !email || !jobTitle) {
     return res.status(400).json({ error: 'Missing required fields.' });
@@ -674,6 +834,7 @@ app.post('/api/apply', upload.single('resume'), async (req, res) => {
         jobTitle,
         jobLocation,
         jobType,
+        metaRows: buildMetaRowsHtml(req),
       }),
       attachments,
     });

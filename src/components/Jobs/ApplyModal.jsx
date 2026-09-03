@@ -17,6 +17,8 @@ export default function ApplyModal({ job, onClose }) {
     linkedin: '',
     resume: null,
     coverLetter: '',
+    /* Honeypot — see the hidden input below. */
+    company: '',
   });
 
   useEffect(() => {
@@ -67,6 +69,7 @@ export default function ApplyModal({ job, onClose }) {
     data.append('jobTitle', job.title);
     data.append('jobLocation', job.location);
     data.append('jobType', job.type);
+    data.append('company', form.company);
     if (form.resume) data.append('resume', form.resume);
 
     try {
@@ -127,6 +130,19 @@ export default function ApplyModal({ job, onClose }) {
 
             {/* Form */}
             <form className="apply-modal__form" onSubmit={handleSubmit}>
+              {/* Honeypot: off-screen and hidden from assistive tech, so only
+                  an automated client ever fills it in. Matches the contact
+                  form's field name so the server check is shared. */}
+              <input
+                type="text"
+                name="company"
+                value={form.company}
+                onChange={handleChange}
+                aria-hidden="true"
+                tabIndex={-1}
+                autoComplete="off"
+                style={{ position: 'absolute', left: '-9999px', opacity: 0 }}
+              />
               <div className="apply-modal__row">
                 <div className="apply-modal__field">
                   <label htmlFor="firstName">First Name <span className="required">*</span></label>
