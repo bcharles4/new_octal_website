@@ -152,22 +152,22 @@ function formLimiter({ windowMs, limit, label, message }) {
   });
 }
 
-/* A visitor sends one enquiry. Five in a quarter of an hour leaves room for a
-   genuine retry after a network failure without being useful to a spammer. */
+/* A visitor sends one enquiry, so one per quarter of an hour per address is
+   enough. A second attempt inside that window is refused. */
 const contactLimiter = formLimiter({
   windowMs: 15 * 60 * 1000,
-  limit: 5,
+  limit: 1,
   label: '/api/contact',
-  message: 'Too many messages sent from this network. Please try again in a few minutes.',
+  message: 'Too many messages sent from this network. Please try again in 15 minutes.',
 });
 
-/* Applications are rarer and each carries an upload, so the window is longer.
-   Five per hour still covers someone applying to several roles in one sitting. */
+/* One application per quarter of an hour per address. Applying to a second
+   role means waiting out the window. */
 const applyLimiter = formLimiter({
-  windowMs: 60 * 60 * 1000,
-  limit: 5,
+  windowMs: 15 * 60 * 1000,
+  limit: 1,
   label: '/api/apply',
-  message: 'Too many applications submitted from this network. Please try again later.',
+  message: 'Too many applications submitted from this network. Please try again in 15 minutes.',
 });
 
 /* The notification templates interpolate submitted text straight into HTML.
